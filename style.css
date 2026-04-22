@@ -1,0 +1,74 @@
+:root {
+    /* Base Colors */
+    --theme-body-background-color: #F9F6ED; /* The off-white background */
+    --theme-body-text-color: #363636;      /* Main text gray */
+    --theme-body-link-color: #026af2;      /* Action link blue */
+    
+    /* Brand Colors */
+    --theme-primary-background-color: #7a7a7a;   /* Header gray */
+    --theme-secondary-background-color: #ffd701; /* Accent yellow */
+    
+    /* Layout Constants */
+    --header-height: 76px; /* From the original scroll-padding-top value */
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+body {
+    font-family: 'Barlow', sans-serif; /* Primary brand font */
+    background-color: var(--theme-body-background-color);
+    color: var(--theme-body-text-color);
+    margin: 0;
+}
+
+header {
+    height: var(--header-height);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.hero {
+    background-color: var(--theme-primary-background-color);
+    color: #ffffff;
+    padding: 60px 5%;
+    text-align: center;
+}
+
+.main-content {
+    max-width: 1100px;
+    margin: -30px auto 50px; /* Standard overlap layout */
+    padding: 0 20px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+}
+
+/* Styling for the Login Button in the Nav */
+.nav-login-btn {
+    background-color: var(--brand-yellow); /* Brand accent color */
+    color: var(--text-dark) !important;   /* Force dark text on yellow */
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 700 !important;          /* Heavier weight for emphasis */
+    border-bottom: none !important;       /* Remove the blue underline hover effect */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;                    /* Separation from other links */
+}
+
+.nav-login-btn:hover {
+    background-color: #e6c200;            /* Slightly darker yellow on hover */
+    transform: translateY(-1px);          /* Subtle lift effect */
+    color: var(--text-dark) !important;
+}

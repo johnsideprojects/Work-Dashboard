@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-padding-top: 76px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Dashboard | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-off-white: #F4F1E8;
+            --brand-gray: #7a7a7a;
+            --brand-yellow: #ffd701;
+            --text-dark: #363636;
+            --link-blue: #026af2;
+            --white: #ffffff;
+            --header-height: 76px;
+            --severity-high: #e74c3c;
+            --severity-medium: #f39c12;
+            --icon-phone: #3498db;
+            --icon-walk: #2ecc71;
+            --icon-email: #9b59b6;
+            --icon-sitter: #e67e22;
+            --icon-turn: #e74c3c;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Barlow', sans-serif; background-color: var(--bg-off-white); color: var(--text-dark); line-height: 1.5; }
+
+        header { height: var(--header-height); background: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 0 4%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .logo-container img { max-height: 55px; width: auto; display: block; }
+        nav { display: flex; gap: 25px; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; }
+        
+        /* STAFF SELECTOR STYLES */
+        .staff-selector { display: flex; gap: 5px; background: #eee; padding: 4px; border-radius: 6px; margin-left: 10px; }
+        .staff-chip { 
+            padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; 
+            cursor: pointer; text-transform: uppercase; transition: all 0.2s; border: none; background: transparent; color: var(--brand-gray);
+        }
+        .staff-chip.active { background: var(--brand-yellow); color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .content-wrapper { max-width: 1550px; margin: 40px auto; padding: 0 20px; }
+        .widget-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .widget { background: var(--white); border: 1px solid rgba(0,0,0,0.05); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .widget-header { font-weight: 700; text-transform: uppercase; font-size: 0.85rem; color: var(--brand-gray); margin-bottom: 12px; border-bottom: 3px solid var(--brand-yellow); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+
+        .widget-inquiry { grid-column: span 2; grid-row: span 2; min-height: 585px; }
+        .widget-clock { grid-column: span 2; height: 280px; }
+        .widget-tasks, .widget-weather { height: 280px; }
+
+        /* INQUIRY TRACKER */
+        .inquiry-container { display: flex; gap: 20px; flex-grow: 1; }
+        .inquiry-actions { flex: 1.2; border-right: 1px solid #f0f0f0; padding-right: 20px; display: flex; flex-direction: column; }
+        .inquiry-feed-container { flex: 0.8; display: flex; flex-direction: column; }
+        .section-label { font-size: 0.65rem; font-weight: 800; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .inquiry-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .facility-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .inquiry-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .inquiry-card:hover { border-color: var(--brand-yellow); background-color: #fffdf5; transform: translateY(-2px); }
+        .card-icon-circle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+        .card-icon-circle svg { width: 18px; height: 18px; fill: white; }
+        .card-label { font-weight: 700; text-transform: uppercase; font-size: 0.6rem; color: var(--brand-gray); }
+        .card-count { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); line-height: 1; }
+        
+        #inquiry-feed { flex-grow: 1; overflow-y: auto; font-size: 0.8rem; background: #fafafa; border-radius: 4px; padding: 10px; max-height: 480px; }
+        .feed-item { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; flex-direction: column; }
+        .feed-item-top { display: flex; justify-content: space-between; font-weight: 700; }
+        .feed-staff-tag { font-size: 0.6rem; color: var(--link-blue); text-transform: uppercase; font-weight: 800; margin-top: 2px; }
+
+        .scoreboard { margin-top: auto; text-align: center; padding: 15px; background: var(--brand-yellow); border-radius: 8px; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.1); }
+        .scoreboard-label { font-weight: 800; color: rgba(0,0,0,0.5); display: block; font-size: 0.65rem; letter-spacing: 1px; }
+        .scoreboard-value { font-size: 3rem; font-weight: 700; line-height: 1; }
+
+        /* OPS CONTEXT */
+        .ops-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; height: 100%; align-items: center; }
+        .clock-section { text-align: left; border-right: 1px solid #eee; padding-right: 20px; }
+        #clock-display { font-size: 2.8rem; font-weight: 700; line-height: 1; }
+        #date-display { font-weight: 500; color: var(--brand-gray); font-size: 0.9rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+        .cal-day { font-size: 0.6rem; font-weight: 800; color: #ccc; }
+        .cal-date { font-size: 0.75rem; padding: 4px 0; border-radius: 4px; color: #777; }
+        .cal-date.today { background: var(--brand-yellow); color: var(--text-dark); font-weight: 700; }
+
+        /* TASK MANAGER */
+        .task-tabs { display: flex; gap: 15px; margin-bottom: 10px; }
+        .task-tab { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer; color: #bbb; border-bottom: 2px solid transparent; padding-bottom: 2px; }
+        .task-tab.active { color: var(--text-dark); border-bottom-color: var(--brand-yellow); }
+        #task-list { flex-grow: 1; overflow-y: auto; max-height: 135px; }
+        .task-item { padding: 8px 12px; margin-bottom: 6px; font-size: 0.8rem; border-radius: 4px; display: flex; flex-direction: column; background: #fafafa; border-bottom: 1px solid #eee; }
+        .task-main { display: flex; align-items: center; }
+        .checkbox { width: 16px; height: 16px; border: 2px solid #ddd; border-radius: 50%; margin-right: 12px; cursor: pointer; flex-shrink: 0; background: white; }
+        .task-item.done .checkbox { background: var(--brand-yellow); border-color: var(--brand-yellow); }
+        .task-meta { font-size: 0.6rem; color: #aaa; margin-left: 28px; text-transform: uppercase; font-weight: 700; }
+
+        .action-btn-small { background: var(--brand-yellow); border: none; padding: 4px 10px; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; cursor: pointer; border-radius: 4px; }
+        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: var(--brand-gray); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <a href="index.html"><img src="aa-self-storage-logo-3c.webp" alt="Logo"></a>
+        </div>
+        <nav>
+            <a href="#">Documents</a>
+            <a href="#">Emails</a>
+            <div class="staff-selector">
+                <button class="staff-chip active" onclick="setStaff('Staff A', this)">Staff A</button>
+                <button class="staff-chip" onclick="setStaff('Staff B', this)">Staff B</button>
+                <button class="staff-chip" onclick="setStaff('Maint', this)">Maint</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="widget-grid">
+            
+            <div class="widget widget-inquiry">
+                <div class="widget-header">
+                    Inquiry Tracker 
+                    <button class="action-btn-small" style="background:#eee;" onclick="resetDay()">Reset Day</button>
+                </div>
+                <div class="inquiry-container">
+                    <div class="inquiry-actions">
+                        <div class="section-label">Daily Lead Sources</div>
+                        <div class="inquiry-cards-grid">
+                            <div class="inquiry-card" onclick="logAction('Phone', true)">
+                                <div class="card-icon-circle" style="background: var(--icon-phone);"><svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg></div>
+                                <span class="card-label">Phone</span>
+                                <span class="card-count" id="count-Phone">0</span>
+                            </div>
+                            <div class="inquiry-card" onclick="logAction('Walk-In', true)">
+                                <div class="card-icon-circle" style="background: var(--icon-walk);"><svg viewBox="0 0 24 24"><path d="M14.12,10H19V12H15.88L13.13,19H11L13.13,12H9V10L11,3H13L14.12,10M12,1C10.89,1 10,1.89 10,3C10,4.11 10.89,5 12,5C13.11,5 14,4.11 14,3C14,1.89 13.11,1 12,1Z"/></svg></div>
+                                <span class="card-label">Walk-In</span>
+                                <span class="card-count" id="count-Walk-In">0</span>
+                            </div>
+                            <div class="inquiry-card" onclick="logAction('Email', true)">
+                                <div class="card-icon-circle" style="background: var(--icon-email);"><svg viewBox="0 0 24 24"><path d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M20,18H4V8L12,13L20,8V18M12,11L4,6H20L12,11Z"/></svg></div>
+                                <span class="card-label">Email</span>
+                                <span class="card-count" id="count-Email">0</span>
+                            </div>
+                        </div>
+
+                        <div class="section-label">Facility Tasks</div>
+                        <div class="facility-cards-grid">
+                            <div class="inquiry-card" onclick="logAction('Sitters', false)">
+                                <div class="card-icon-circle" style="background: var(--icon-sitter);"><svg viewBox="0 0 24 24"><path d="M4,18V13H3V4C3,2.9 3.9,2 5,2H16V4H5V11H14V13H5V18H4M17,13H22V15H17V13M17,17H22V19H17V17M17,9H22V11H17V9M15,18V13H16V18H15Z"/></svg></div>
+                                <span class="card-label">Sitters</span>
+                                <span class="card-count" id="count-Sitters">0</span>
+                            </div>
+                            <div class="inquiry-card" onclick="logAction('Turn-Around', false)">
+                                <div class="card-icon-circle" style="background: var(--icon-turn);"><svg viewBox="0 0 24 24"><path d="M18.92,6.01C18.72,5.42 18.16,5 17.5,5H6.5C5.84,5 5.28,5.42 5.08,6.01L3,12V20A1,1 0 0,0 4,21H5A1,1 0 0,0 6,20V19H18V20A1,1 0 0,0 19,21H20A1,1 0 0,0 21,20V12L18.92,6.01M6.5,16A1.5,1.5 0 1,1 8,14.5A1.5,1.5 0 0,1 6.5,16M17.5,16A1.5,1.5 0 1,1 19,14.5A1.5,1.5 0 0,1 17.5,16M5,11L6.5,6.5H17.5L19,11H5Z"/></svg></div>
+                                <span class="card-label">Turn-Around</span>
+                                <span class="card-count" id="count-Turn-Around">0</span>
+                            </div>
+                        </div>
+
+                        <div class="scoreboard">
+                            <span class="scoreboard-label">DAILY LEAD TOTAL</span>
+                            <span id="total-stat" class="scoreboard-value">0</span>
+                        </div>
+                    </div>
+                    <div class="inquiry-feed-container">
+                        <div class="section-label">Audit Trail</div>
+                        <div id="inquiry-feed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget widget-clock">
+                <div class="widget-header">Ops Context</div>
+                <div class="ops-grid">
+                    <div class="clock-section">
+                        <div id="clock-display">00:00:00</div>
+                        <div id="date-display">Loading...</div>
+                    </div>
+                    <div class="calendar-section">
+                        <div id="cal-title" style="font-size:0.7rem; font-weight:800; text-align:center; margin-bottom:5px; color:var(--brand-gray);">MONTH</div>
+                        <div class="calendar-grid" id="calendar-grid">
+                            <div class="cal-day">S</div><div class="cal-day">M</div><div class="cal-day">T</div><div class="cal-day">W</div><div class="cal-day">T</div><div class="cal-day">F</div><div class="cal-day">S</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget widget-tasks">
+                <div class="widget-header">Task Manager <button class="action-btn-small" onclick="addTask()">Add Task</button></div>
+                <div class="task-controls">
+                    <div class="task-tabs">
+                        <div class="task-tab active" id="tab-active" onclick="setTaskFilter('active')">Active</div>
+                        <div class="task-tab" id="tab-done" onclick="setTaskFilter('done')">Completed</div>
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" id="task-input" placeholder="What needs doing?" style="flex-grow:1; padding:6px; font-size:0.8rem;">
+                        <select id="task-severity" style="padding:6px; font-size:0.75rem;">
+                            <option value="medium">Standard</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="task-list"></div>
+            </div>
+
+            <div class="widget widget-weather">
+                <div class="widget-header">Leland Weather</div>
+                <div style="text-align:center; margin:auto;">
+                    <div style="font-size:3.5rem; font-weight:700; line-height:1;">74°F</div>
+                    <div style="font-weight:700; color:var(--brand-gray); text-transform: uppercase; font-size:0.9rem;">Partly Cloudy</div>
+                    <div class="precip-badge">☔ 10% PRECIP CHANCE</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>&copy; 2026 AA Self Storage Leland Operations</footer>
+
+    <script>
+        // --- STAFF SELECTOR STATE ---
+        let activeStaff = "Staff A";
+        function setStaff(name, el) {
+            activeStaff = name;
+            document.querySelectorAll('.staff-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-display').textContent = now.toLocaleTimeString([], {hour12:true, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            document.getElementById('date-display').textContent = now.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});
+        }
+        
+        function renderCalendar() {
+            const now = new Date();
+            const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+            document.getElementById('cal-title').textContent = monthNames[now.getMonth()];
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const grid = document.getElementById('calendar-grid');
+            const headers = grid.querySelectorAll('.cal-day');
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+            for(let i=0; i<firstDay; i++) grid.appendChild(document.createElement('div'));
+            for(let d=1; d<=daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'cal-date' + (d === now.getDate() ? ' today' : '');
+                dayEl.textContent = d;
+                grid.appendChild(dayEl);
+            }
+        }
+        setInterval(updateClock, 1000); updateClock(); renderCalendar();
+
+        // --- INQUIRIES WITH STAFF TAGS ---
+        let inquiryData = JSON.parse(localStorage.getItem('office_inquiries_v10')) || { totalLeads: 0, counts: { Phone:0, 'Walk-In':0, Email:0, Sitters:0, 'Turn-Around':0 }, logs:[] };
+        
+        function logAction(type, countsAsLead) {
+            inquiryData.counts[type]++;
+            if(countsAsLead) inquiryData.totalLeads++;
+            inquiryData.logs.unshift({ 
+                type, 
+                staff: activeStaff, 
+                time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) 
+            });
+            if(inquiryData.logs.length > 20) inquiryData.logs.pop();
+            renderInquiries();
+        }
+
+        function resetDay() { if(confirm("Reset Lead tallies?")) { inquiryData = { totalLeads:0, counts:{Phone:0, 'Walk-In':0, Email:0, Sitters:0, 'Turn-Around':0}, logs:[] }; renderInquiries(); } }
+        
+        function renderInquiries() {
+            localStorage.setItem('office_inquiries_v10', JSON.stringify(inquiryData));
+            document.getElementById('total-stat').textContent = inquiryData.totalLeads;
+            for(let t in inquiryData.counts) { 
+                const el = document.getElementById(`count-${t}`);
+                if(el) el.textContent = inquiryData.counts[t]; 
+            }
+            document.getElementById('inquiry-feed').innerHTML = inquiryData.logs.map(l => `
+                <div class="feed-item">
+                    <div class="feed-item-top">
+                        <span><strong>${l.type}</strong></span>
+                        <span style="color:#aaa;">${l.time}</span>
+                    </div>
+                    <div class="feed-staff-tag">Logged by: ${l.staff}</div>
+                </div>
+            `).join('');
+        }
+        renderInquiries();
+
+        // --- TASKS WITH STAFF TAGS ---
+        let tasks = JSON.parse(localStorage.getItem('office_tasks_v10')) || [];
+        let taskFilter = 'active';
+
+        function setTaskFilter(filter) {
+            taskFilter = filter;
+            document.getElementById('tab-active').classList.toggle('active', filter === 'active');
+            document.getElementById('tab-done').classList.toggle('active', filter === 'done');
+            renderTasks();
+        }
+
+        function addTask() {
+            const val = document.getElementById('task-input').value;
+            if(!val) return;
+            tasks.push({ 
+                id: Date.now(), 
+                text: val, 
+                severity: document.getElementById('task-severity').value, 
+                completed: false, 
+                staff: activeStaff,
+                time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) 
+            });
+            document.getElementById('task-input').value = "";
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if(task) task.completed = !task.completed;
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+        }
+
+        function renderTasks() {
+            localStorage.setItem('office_tasks_v10', JSON.stringify(tasks));
+            const filtered = tasks.filter(t => taskFilter === 'active' ? !t.completed : t.completed);
+            const list = document.getElementById('task-list');
+            list.innerHTML = filtered.map(t => `
+                <div class="task-item ${t.completed ? 'done' : ''}" style="border-left: 4px solid ${t.severity === 'high' ? '#e74c3c' : '#f39c12'};">
+                    <div class="task-main">
+                        <div class="checkbox" onclick="toggleTask(${t.id})"></div>
+                        <div style="flex-grow:1;">${t.text}</div>
+                        <div onclick="deleteTask(${t.id})" style="margin-left:10px; cursor:pointer; color:#ccc;">×</div>
+                    </div>
+                    <div class="task-meta">${t.staff} • ${t.time}</div>
+                </div>
+            `).join('');
+        }
+        renderTasks();
+    </script>
+</body>
+</html>
