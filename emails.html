@@ -3,150 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Office Dashboard</title>
+    <title>Email Desk | AA Self Storage</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Exact color palette from the Leland NC site */
-            --bg-off-white: #F9F6ED;
+            --bg-off-white: #F4F1E8; 
             --brand-gray: #7a7a7a;
-            --brand-yellow: #ffd701;
+            --brand-yellow: #ffd701; 
+            --brand-red: #e74c3c;    
+            --brand-blue: #026af2;   
             --text-dark: #363636;
-            --link-blue: #026af2;
             --white: #ffffff;
             --header-height: 76px;
-            --shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: 'Barlow', sans-serif;
-            background-color: var(--bg-off-white);
-            color: var(--text-dark);
-            line-height: 1.5;
+        body { 
+            margin: 0; 
+            font-family: 'Barlow', sans-serif; 
+            background-color: var(--bg-off-white); 
+            color: var(--text-dark); 
+            overflow: hidden; 
         }
 
-        /* --- STICKY HEADER --- */
-        header {
-            height: var(--header-height);
-            background: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
+        /* --- HEADER --- */
+        header { 
+            height: var(--header-height); 
+            background: var(--white); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 4%; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 4px solid var(--brand-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
         }
-
-        .logo {
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: 0.5px;
-            color: var(--brand-gray);
+        .logo-container img { max-height: 55px; width: auto; display: block; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        nav { display: flex; gap: 25px; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
+        
+        .staff-selector { display: flex; gap: 5px; background: #eee; padding: 4px; border-radius: 6px; }
+        .staff-chip { 
+            display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 4px; 
+            font-size: 0.7rem; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--brand-gray);
             text-transform: uppercase;
         }
+        .staff-chip.active { background: var(--brand-yellow); color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .avatar-small { width: 20px; height: 20px; border-radius: 50%; background: #ddd; object-fit: cover; }
 
-        nav { display: flex; gap: 30px; }
+        .settings-trigger { cursor: pointer; display: flex; align-items: center; color: var(--brand-gray); transition: color 0.2s; }
+        .settings-trigger:hover { color: var(--text-dark); }
 
-        nav a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            transition: color 0.2s ease;
-            padding-bottom: 5px;
+        /* --- MODAL STYLES --- */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; 
+        }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-weight: 700; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--brand-yellow); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .modal-input, .modal-textarea, .modal-select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; }
+        .modal-textarea { height: 150px; resize: none; }
+        .section-label-modal { font-size: 0.65rem; font-weight: 800; color: #aaa; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .action-btn-small { background: var(--brand-yellow); border: none; padding: 12px 16px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; cursor: pointer; border-radius: 4px; }
+
+        /* --- LAYOUT --- */
+        .desk-grid { display: grid; grid-template-columns: 320px 1fr 380px; height: calc(100vh - var(--header-height)); }
+
+        .template-sidebar {
+            background: #fdfdfd; border-right: 1px solid #ddd; padding: 25px; overflow-y: auto; display: flex; flex-direction: column;
+        }
+        .section-label { 
+            font-size: 0.65rem; font-weight: 800; color: #aaa; margin: 20px 0 10px 0; 
+            text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #eee; padding-bottom: 5px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .template-btn {
+            width: 100%; padding: 12px 15px; margin-bottom: 6px; background: white; border: 1px solid #eee;
+            border-radius: 8px; text-align: left; font-family: 'Barlow'; font-weight: 700;
+            text-transform: uppercase; font-size: 0.75rem; color: var(--brand-gray); cursor: pointer; transition: 0.2s;
+        }
+        .template-btn:hover { border-color: var(--brand-yellow); transform: translateX(5px); }
+        .template-btn.active { 
+            background: var(--brand-yellow); color: var(--text-dark); border-color: var(--brand-yellow);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        nav a:hover, nav a.active {
-            color: var(--link-blue);
-            border-bottom: 3px solid var(--brand-yellow);
+        .manage-templates-link {
+            margin-top: auto; padding: 15px; text-align: center; font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; color: var(--brand-blue); cursor: pointer; border-top: 1px solid #eee;
         }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            background-color: var(--brand-gray);
-            color: var(--white);
-            padding: 80px 6% 120px 6%; /* Extra bottom padding for card overlap */
-            text-align: center;
+        .canvas { background: #e9e6dd; padding: 40px; display: flex; justify-content: center; overflow-y: auto; }
+        .paper {
+            background: white; width: 100%; max-width: 800px; min-height: 1000px; padding: 80px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); position: relative;
         }
+        .paper::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--brand-yellow); }
+        
+        /* Graphics Support */
+        #email-editor { outline: none; font-size: 1.1rem; line-height: 1.7; color: #333; min-height: 500px; white-space: pre-wrap; }
+        #email-editor img { max-width: 100%; height: auto; display: block; margin: 15px 0; border-radius: 4px; }
 
-        .hero h1 {
-            margin: 0;
-            font-size: 2.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        .modifier-sidebar { background: white; border-left: 1px solid #ddd; padding: 30px; display: flex; flex-direction: column; }
+        .field-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.65rem; font-weight: 800; color: #aaa; text-transform: uppercase; margin-bottom: 6px; }
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .currency-symbol { position: absolute; left: 12px; font-weight: 700; color: var(--text-dark); }
+        .price-input { padding-left: 25px !important; }
 
-        /* --- MAIN CONTENT & CARDS --- */
-        .content-wrapper {
-            max-width: 1200px;
-            margin: -60px auto 60px auto; /* This creates the "floating card" look */
-            padding: 0 20px;
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #eee; background: #fafafa; 
+            border-radius: 6px; font-family: 'Barlow'; font-size: 0.95rem; outline: none;
         }
+        input:focus { border-color: var(--brand-yellow); background: white; }
 
-        .main-card {
-            background: var(--white);
-            border-radius: 4px;
-            padding: 50px;
-            box-shadow: var(--shadow);
-            min-height: 400px;
+        .action-stack { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+        .btn-main {
+            padding: 16px; border-radius: 6px; border: none; font-weight: 700; 
+            text-transform: uppercase; font-size: 0.85rem; cursor: pointer; font-family: 'Barlow';
+            transition: all 0.2s; text-align: center; text-decoration: none;
         }
+        .btn-copy { background: #eee; color: var(--text-dark); }
+        .btn-copy.success { background: #2ecc71; color: white; }
+        .btn-send { background: var(--brand-blue); color: white; }
 
-        /* Utility placeholder for content */
-        .placeholder-content {
-            border: 2px dashed #e0e0e0;
-            border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            color: #999;
-        }
+        .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+        .avatar-opt { width: 100%; aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 3px solid transparent; }
+        .avatar-opt.selected { border-color: var(--brand-yellow); }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            font-size: 0.85rem;
-            color: var(--brand-gray);
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Office Management</div>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="documents.html">Documents</a>
-            <a href="index.html" class="active">Emails</a>
-            <a href="misc.html">Misc</a>
-        </nav>
-    </header>
-
-    <section class="hero">
-        <h1>Emails</h1>
-        <p>Operational Overview for Leland Branch</p>
-    </section>
-
-    <main class="content-wrapper">
-        <div class="main-card">
-            <h2>Welcome</h2>
-            <hr style="border: 0; border-top: 4px solid var(--brand-yellow); width: 60px; margin: 20px 0;">
-            <p>Select a department from the navigation to begin.</p>
-            
-            <div class="placeholder-content">
-                [ Insert Dashboard Widgets Here ]
+        <div class="logo-container"><img src="aa-self-storage-logo-3c.webp" alt="AA Self Storage"></div>
+        <div class="nav-right">
+            <nav><a href="index.html">Dashboard</a><a href="#" style="color: var(--brand-blue); border-bottom: 2px solid var(--brand-blue);">Emails</a></nav>
+            <div class="staff-selector" id="header-staff-selector"></div>
+            <div class="settings-trigger" onclick="toggleModal('settings-modal', true)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
         </div>
+    </header>
+
+    <div class="modal-overlay" id="settings-modal" onclick="if(event.target === this) toggleModal('settings-modal', false)">
+        <div class="modal">
+            <div class="modal-header">Staff Settings</div>
+            <label class="section-label-modal">Select Staff to Edit</label>
+            <select id="edit-staff-target" class="modal-select" onchange="loadStaffDataForEdit()">
+                <option value="0">Staff A</option>
+                <option value="1">Staff B</option>
+                <option value="2">Maint</option>
+            </select>
+            <label class="section-label-modal">Display Name</label>
+            <input type="text" id="edit-name" class="modal-input" placeholder="Enter Name">
+            <label class="section-label-modal">Choose Avatar</label>
+            <div class="avatar-grid" id="avatar-options"></div>
+            <button class="btn-main btn-send" style="width:100%" onclick="saveStaffSettings()">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="template-modal" onclick="if(event.target === this) toggleModal('template-modal', false)">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="temp-modal-title">Edit Template</span>
+                <span id="delete-temp-btn" style="color:var(--brand-red); font-size:0.65rem; cursor:pointer;" onclick="deleteTemplate()">Delete</span>
+            </div>
+            <input type="hidden" id="edit-temp-id">
+            <label class="section-label-modal">Category</label>
+            <select id="temp-category" class="modal-select">
+                <option value="Sales">Sales / Leads</option>
+                <option value="Operations">Operations</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <label class="section-label-modal">Menu Title</label>
+            <input type="text" id="temp-title" class="modal-input" placeholder="e.g. Price Quote">
+            
+            <label class="section-label-modal">Image URL (Optional)</label>
+            <input type="text" id="temp-image" class="modal-input" placeholder="https://example.com/logo.png">
+
+            <label class="section-label-modal">Email Subject Line</label>
+            <input type="text" id="temp-subject" class="modal-input" placeholder="e.g. Your Storage Quote">
+            
+            <label class="section-label-modal">Email Body</label>
+            <div style="font-size:0.6rem; color:#aaa; margin-bottom:5px;">Shortcodes: [NAME], [UNIT], [PRICE], [STAFF], [IMAGE]</div>
+            <textarea id="temp-body" class="modal-textarea"></textarea>
+            
+            <button class="btn-main btn-send" style="width:100%" onclick="saveTemplate()">Save Template</button>
+        </div>
+    </div>
+
+    <main class="desk-grid">
+        <aside class="template-sidebar">
+            <div id="template-list-container" style="flex-grow:1;"></div>
+            <div class="manage-templates-link" onclick="openTemplateEditor()">+ Add New Template</div>
+        </aside>
+
+        <section class="canvas">
+            <div class="paper"><div id="email-editor" contenteditable="true">Select a template to begin...</div></div>
+        </section>
+
+        <aside class="modifier-sidebar">
+            <div class="section-label">Recipient Details</div>
+            <div class="field-group"><label>Customer Name</label><input type="text" id="v-name" onkeyup="syncDraft()"></div>
+            <div class="field-group"><label>Email Address</label><input type="email" id="v-email"></div>
+            <div class="section-label" style="margin-top:20px;">Unit Details</div>
+            <div class="field-group"><label>Unit Size</label><input type="text" id="v-unit" onkeyup="syncDraft()"></div>
+            <div class="field-group"><label>Monthly Rate</label><div class="input-wrapper"><span class="currency-symbol">$</span><input type="text" id="v-price" class="price-input" onkeyup="syncDraft()"></div></div>
+            <div class="action-stack">
+                <button id="copy-btn" class="btn-main btn-copy" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button class="btn-main btn-send" onclick="sendDirect()">Launch Email Client</button>
+                <div id="edit-cur-link" style="text-align:center; font-size:0.65rem; color:var(--brand-gray); cursor:pointer; text-transform:uppercase; font-weight:700; display:none;" onclick="editCurrentTemplate()">Edit This Template</div>
+            </div>
+        </aside>
     </main>
 
-    <footer>
-        &copy; 2026 Office Local Dashboard | Built with Leland Design System
-    </footer>
+    <script>
+        const AVATARS = ["https://api.dicebear.com/7.x/avataaars/svg?seed=Staff1","https://api.dicebear.com/7.x/avataaars/svg?seed=Staff2","https://api.dicebear.com/7.x/avataaars/svg?seed=Maint","https://api.dicebear.com/7.x/avataaars/svg?seed=Felix","https://api.dicebear.com/7.x/avataaars/svg?seed=Max","https://api.dicebear.com/7.x/avataaars/svg?seed=Luna","https://api.dicebear.com/7.x/avataaars/svg?seed=Kiki","https://api.dicebear.com/7.x/avataaars/svg?seed=Leo"];
+        
+        let staffData = JSON.parse(localStorage.getItem('office_staff_v1')) || [
+            { id: 0, name: "Staff A", avatar: AVATARS[0] },
+            { id: 1, name: "Staff B", avatar: AVATARS[1] },
+            { id: 2, name: "Maint", avatar: AVATARS[2] }
+        ];
 
+        let templates = JSON.parse(localStorage.getItem('office_templates_v1')) || [
+            { id: 1, category: "Sales", title: "Price Quote", imageUrl: "", subject: "Your Storage Quote", body: "Hi [NAME],\n\nI've reserved a [UNIT] unit for you at $[PRICE]/mo.\n\nBest,\n[STAFF]" },
+            { id: 2, category: "Operations", title: "Autopay Setup", imageUrl: "", subject: "Simplify your payments", body: "Hello [NAME],\n\nWe noticed you aren't on autopay for your [UNIT] unit. It's the easiest way to avoid late fees on your $[PRICE] monthly rent.\n\nBest,\n[STAFF]" },
+            { id: 3, category: "Operations", title: "Delinquency Notice", imageUrl: "", subject: "Urgent: Payment Past Due", body: "Hi [NAME],\n\nYour payment for unit [UNIT] is currently past due. Please settle the balance of $[PRICE] to avoid gate lockout.\n\nBest,\n[STAFF]" },
+            { id: 4, category: "Maintenance", title: "Unit Repair", imageUrl: "", subject: "Scheduled Maintenance", body: "Hello [NAME],\n\nWe need to perform routine maintenance on unit [UNIT]. Please ensure your lock is accessible by Tuesday.\n\nThanks,\n[STAFF]" },
+            { id: 5, category: "Maintenance", title: "Clean Out Reminder", imageUrl: "", subject: "Move-out Inspection", body: "Hi [NAME],\n\nPlease remember to sweep out your [UNIT] unit and remove your lock before 5 PM today to finalize your move-out.\n\nBest,\n[STAFF]" },
+            { id: 6, category: "Admin", title: "Insurance Update", imageUrl: "", subject: "Action Required: Insurance", body: "Hello [NAME],\n\nYour proof of insurance for your [UNIT] unit has expired. Please provide an updated policy or enroll in our protection plan ($[PRICE]/mo).\n\nBest,\n[STAFF]" }
+        ];
+
+        let activeStaffIdx = 0;
+        let selectedTemplateId = null;
+        let selectedAvatarUrl = staffData[0].avatar;
+
+        function init() { renderStaffSelectors(); renderAvatarOptions(); renderTemplates(); }
+
+        function renderTemplates() {
+            const container = document.getElementById('template-list-container');
+            const categories = ["Sales", "Operations", "Maintenance", "Admin"];
+            
+            container.innerHTML = categories.map(cat => {
+                const catTemplates = templates.filter(t => t.category === cat);
+                if(catTemplates.length === 0) return '';
+                return `
+                    <div class="section-label">${cat}</div>
+                    ${catTemplates.map(t => `
+                        <button class="template-btn ${t.id == selectedTemplateId ? 'active' : ''}" onclick="selectTemplate(${t.id})">
+                            ${t.title}
+                        </button>
+                    `).join('')}
+                `;
+            }).join('');
+            document.getElementById('edit-cur-link').style.display = selectedTemplateId ? 'block' : 'none';
+        }
+
+        function selectTemplate(id) { selectedTemplateId = id; renderTemplates(); syncDraft(); }
+
+        function openTemplateEditor(id = null) {
+            if (id) {
+                const t = templates.find(x => x.id == id);
+                document.getElementById('temp-modal-title').innerText = "Edit Template";
+                document.getElementById('edit-temp-id').value = t.id;
+                document.getElementById('temp-category').value = t.category || "Sales";
+                document.getElementById('temp-title').value = t.title;
+                document.getElementById('temp-image').value = t.imageUrl || "";
+                document.getElementById('temp-subject').value = t.subject;
+                document.getElementById('temp-body').value = t.body;
+                document.getElementById('delete-temp-btn').style.display = "block";
+            } else {
+                document.getElementById('temp-modal-title').innerText = "Add Template";
+                document.getElementById('edit-temp-id').value = "";
+                document.getElementById('temp-category').value = "Sales";
+                document.getElementById('temp-title').value = "";
+                document.getElementById('temp-image').value = "";
+                document.getElementById('temp-subject').value = "";
+                document.getElementById('temp-body').value = "";
+                document.getElementById('delete-temp-btn').style.display = "none";
+            }
+            toggleModal('template-modal', true);
+        }
+
+        function saveTemplate() {
+            const id = document.getElementById('edit-temp-id').value;
+            const newT = {
+                id: id ? parseInt(id) : Date.now(),
+                category: document.getElementById('temp-category').value,
+                title: document.getElementById('temp-title').value,
+                imageUrl: document.getElementById('temp-image').value,
+                subject: document.getElementById('temp-subject').value,
+                body: document.getElementById('temp-body').value
+            };
+            if (id) templates = templates.map(t => t.id == id ? newT : t);
+            else { templates.push(newT); selectedTemplateId = newT.id; }
+            localStorage.setItem('office_templates_v1', JSON.stringify(templates));
+            renderTemplates(); syncDraft(); toggleModal('template-modal', false);
+        }
+
+        function deleteTemplate() {
+            if (confirm("Delete permanently?")) {
+                templates = templates.filter(t => t.id != document.getElementById('edit-temp-id').value);
+                localStorage.setItem('office_templates_v1', JSON.stringify(templates));
+                selectedTemplateId = null;
+                renderTemplates(); document.getElementById('email-editor').innerHTML = "Select a template to begin..."; toggleModal('template-modal', false);
+            }
+        }
+
+        function editCurrentTemplate() { if (selectedTemplateId) openTemplateEditor(selectedTemplateId); }
+
+        function syncDraft() {
+            if (!selectedTemplateId) return;
+            const t = templates.find(x => x.id == selectedTemplateId);
+            const name = document.getElementById('v-name').value || "[Customer Name]";
+            const unit = document.getElementById('v-unit').value || "[Unit Type]";
+            const price = document.getElementById('v-price').value || "0.00";
+            const staff = staffData[activeStaffIdx].name;
+            
+            // Image Logic
+            const imgHtml = t.imageUrl ? `<img src="${t.imageUrl}" alt="Email Graphic">` : "";
+
+            let output = t.body
+                .replace(/\[IMAGE\]/g, imgHtml)
+                .replace(/\[NAME\]/g, name)
+                .replace(/\[UNIT\]/g, unit)
+                .replace(/\[PRICE\]/g, price)
+                .replace(/\[STAFF\]/g, staff);
+            
+            document.getElementById('email-editor').innerHTML = output;
+        }
+
+        function copyToClipboard() {
+            const editor = document.getElementById('email-editor');
+            const range = document.createRange();
+            range.selectNode(editor);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            
+            try {
+                const successful = document.execCommand('copy');
+                if(successful) {
+                    const btn = document.getElementById('copy-btn');
+                    btn.innerText = "COPIED!"; btn.classList.add('success');
+                    setTimeout(() => { btn.innerText = "COPY TO CLIPBOARD"; btn.classList.remove('success'); }, 2000);
+                }
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            window.getSelection().removeAllRanges();
+        }
+
+        function sendDirect() {
+            const t = templates.find(x => x.id == selectedTemplateId);
+            window.open(`mailto:${document.getElementById('v-email').value}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(document.getElementById('email-editor').innerText)}`, '_blank');
+        }
+
+        function renderStaffSelectors() {
+            document.getElementById('header-staff-selector').innerHTML = staffData.map((s, idx) => `
+                <button class="staff-chip ${idx === activeStaffIdx ? 'active' : ''}" onclick="setActiveStaff(${idx})">
+                    <img src="${s.avatar}" class="avatar-small"> ${s.name}
+                </button>
+            `).join('');
+        }
+        function setActiveStaff(idx) { activeStaffIdx = idx; renderStaffSelectors(); syncDraft(); }
+        function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+        function loadStaffDataForEdit() {
+            const s = staffData[document.getElementById('edit-staff-target').value];
+            document.getElementById('edit-name').value = s.name;
+            selectedAvatarUrl = s.avatar; renderAvatarOptions();
+        }
+        function renderAvatarOptions() {
+            document.getElementById('avatar-options').innerHTML = AVATARS.map(url => `
+                <img src="${url}" class="avatar-opt ${url === selectedAvatarUrl ? 'selected' : ''}" onclick="selectedAvatarUrl='${url}'; renderAvatarOptions();">
+            `).join('');
+        }
+        function saveStaffSettings() {
+            const idx = document.getElementById('edit-staff-target').value;
+            staffData[idx].name = document.getElementById('edit-name').value;
+            staffData[idx].avatar = selectedAvatarUrl;
+            localStorage.setItem('office_staff_v1', JSON.stringify(staffData));
+            renderStaffSelectors(); syncDraft(); toggleModal('settings-modal', false);
+        }
+
+        init();
+    </script>
 </body>
 </html>
