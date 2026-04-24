@@ -16,8 +16,6 @@
             --text-dark: #363636;
             --white: #ffffff;
             --header-height: 76px;
-            --severity-high: #e74c3c;
-            --severity-medium: #f39c12;
             --widget-height: calc(100vh - 180px);
         }
 
@@ -142,14 +140,40 @@
         .scoreboard { text-align: center; padding: 12px; background: var(--brand-yellow); border-radius: 8px; margin-top: 10px; flex-shrink: 0; }
         .scoreboard-value { font-size: 2.2rem; font-weight: 700; line-height: 1; }
 
-        /* REDESIGNED TASK MANAGER STYLES */
-        .task-controls { margin-bottom: 20px; flex-shrink: 0; }
+        /* SIMPLIFIED TASK MANAGER STYLES */
+        .task-controls { 
+            margin-bottom: 20px; 
+            flex-shrink: 0; 
+            background: #fcfcfc; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border: 1px solid #eee;
+        }
         .task-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-        .task-tab { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; color: #aaa; padding: 8px 16px; border-radius: 4px; background: #eee; }
+        .task-tab { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; color: #aaa; padding: 8px 16px; border-radius: 4px; background: #eee; border: none; }
         .task-tab.active { background: var(--brand-yellow); color: var(--text-dark); }
-        #task-input { flex-grow: 1; padding: 12px; font-size: 1rem; border: 2px solid #eee; border-radius: 6px; }
-        .control-select { padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-weight: 700; font-size: 0.85rem; }
         
+        .task-input-group { display: flex; gap: 10px; }
+        #task-input { flex-grow: 1; padding: 12px; font-size: 1rem; border: 2px solid #eee; border-radius: 6px; font-family: inherit; }
+        #task-input:focus { outline: none; border-color: var(--brand-yellow); }
+        
+        .btn-add-task { 
+            background: var(--brand-blue); 
+            color: white; 
+            border: none; 
+            padding: 0 24px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
+            cursor: pointer; 
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-add-task:hover { background: #0056cc; }
+
         #task-list { 
             flex-grow: 1; 
             overflow-y: auto; 
@@ -160,99 +184,55 @@
         }
 
         .task-item { 
-            padding: 12px 16px; 
+            padding: 15px 20px; 
             border-radius: 8px; 
             background: #fff; 
-            border: 1px solid #eef0f2; 
+            border: 1px solid #e0e0e0; 
             display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
+            align-items: center; 
+            gap: 15px; 
             position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
-
-        .task-item.priority-high { border-left: 5px solid var(--brand-red); }
-        .task-item.priority-medium { border-left: 5px solid var(--brand-yellow); }
-        .task-item.maint-assigned { background: #fdfdfd; }
-        .task-item.done { opacity: 0.5; }
-
-        .task-main { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 12px; 
-        }
+        .task-item.done { opacity: 0.6; background-color: #fafafa; }
 
         .checkbox { 
-            width: 22px; 
-            height: 22px; 
-            border: 2px solid #ddd; 
-            border-radius: 50%; 
+            width: 24px; 
+            height: 24px; 
+            border: 2px solid #ccc; 
+            border-radius: 4px; 
             cursor: pointer; 
             background: white; 
             flex-shrink: 0; 
-            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
         .task-item.done .checkbox { background: var(--brand-yellow); border-color: var(--brand-yellow); }
-
-        .task-text { 
-            flex-grow: 1; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            color: var(--text-dark);
-            line-height: 1.3;
-        }
-
-        .task-time {
-            font-size: 0.65rem;
-            color: #bbb;
-            font-weight: 800;
-            white-space: nowrap;
-            padding-top: 4px;
-        }
-
-        .task-footer {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-top: 8px;
-            border-top: 1px solid #f5f5f5;
-            margin-left: 34px;
-        }
-
-        .team-label {
-            font-size: 0.6rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #aaa;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-actor {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--brand-gray);
-        }
-
-        .task-delete {
-            color: #ddd;
-            cursor: pointer;
-            font-size: 1.2rem;
-            line-height: 1;
-            transition: color 0.2s;
-        }
+        .task-item.done .checkbox::after { content: "✓"; color: var(--text-dark); font-weight: 800; font-size: 14px; }
+        
+        .task-text { flex-grow: 1; font-weight: 700; font-size: 1rem; color: var(--text-dark); }
+        .task-item.done .task-text { text-decoration: line-through; color: #888; }
+        
+        .task-time { font-size: 0.7rem; color: #aaa; font-weight: 700; white-space: nowrap; margin-right: 10px; }
+        .task-delete { color: #ddd; cursor: pointer; font-size: 1.4rem; line-height: 1; transition: color 0.2s; margin-left: 5px; }
         .task-delete:hover { color: var(--brand-red); }
 
-        /* WEATHER STYLES */
-        .weather-widget-content {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: space-between; 
+        .empty-feed {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; padding: 40px 20px; text-align: center; color: #ccc;
         }
+        .empty-feed svg { margin-bottom: 15px; opacity: 0.4; }
+        .empty-feed p { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-size: 0.9rem; color: var(--brand-gray); }
+        .empty-btn {
+            margin-top: 20px; background: none; border: 2px solid var(--brand-yellow); 
+            color: var(--text-dark); padding: 8px 16px; border-radius: 6px; 
+            font-weight: 700; font-size: 0.7rem; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* WEATHER STYLES */
+        .weather-widget-content { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
         .weather-main-display { text-align: center; padding-bottom: 5px; }
         .weather-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .metric-pill { background: #f8f8f8; padding: 6px 10px; border-radius: 6px; display: flex; align-items: center; gap: 8px; border: 1px solid #eee; }
@@ -284,13 +264,13 @@
         <div class="nav-right">
             <nav><a href="#">Documents</a><a href="#">Emails</a></nav>
             <div class="staff-selector" id="header-staff-selector"></div>
-            <div class="settings-trigger" onclick="toggleModal(true)">
+            <div class="settings-trigger" onclick="toggleModal('settings-modal', true)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             </div>
         </div>
     </header>
 
-    <div class="modal-overlay" id="settings-modal" onclick="if(event.target === this) toggleModal(false)">
+    <div class="modal-overlay" id="settings-modal" onclick="if(event.target === this) toggleModal('settings-modal', false)">
         <div class="modal">
             <div class="modal-header">Staff Settings</div>
             <label class="section-label-modal">Select Staff to Edit</label>
@@ -304,8 +284,19 @@
             <label class="section-label-modal">Choose Avatar</label>
             <div class="avatar-grid" id="avatar-options"></div>
             <div style="display:flex; gap:10px; margin-top:20px;">
-                <button class="action-btn-small" style="flex-grow:1; background:#eee;" onclick="toggleModal(false)">Cancel</button>
+                <button class="action-btn-small" style="flex-grow:1; background:#eee;" onclick="toggleModal('settings-modal', false)">Cancel</button>
                 <button class="action-btn-small" style="flex-grow:1;" onclick="saveStaffSettings()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reset-modal" onclick="if(event.target === this) toggleModal('reset-modal', false)">
+        <div class="modal">
+            <div class="modal-header">Confirm Tracker Reset</div>
+            <p style="font-size: 0.85rem; color: var(--brand-gray); margin-bottom: 25px;">Are you sure you want to clear all tally counts and the audit trail for today? This action cannot be undone.</p>
+            <div style="display:flex; gap:10px;">
+                <button class="action-btn-small" style="flex-grow:1; background:#eee;" onclick="toggleModal('reset-modal', false)">Keep Values</button>
+                <button class="action-btn-small" style="flex-grow:1; background: var(--brand-red); color: white;" onclick="confirmReset()">Clear Tracker</button>
             </div>
         </div>
     </div>
@@ -313,7 +304,7 @@
     <main class="content-wrapper">
         <div class="widget-grid">
             <div class="widget widget-inquiry">
-                <div class="widget-header">Tracker <button style="font-size: 0.55rem; opacity: 0.4; border:none; background:none; cursor:pointer;" onclick="resetDay()">Reset</button></div>
+                <div class="widget-header">Tracker <button style="font-size: 0.55rem; opacity: 0.4; border:none; background:none; cursor:pointer;" onclick="toggleModal('reset-modal', true)">Reset</button></div>
                 <div class="inquiry-container">
                     <div class="section-label">Leads</div>
                     <div class="card-stack">
@@ -356,16 +347,15 @@
             </div>
 
             <div class="widget widget-tasks">
-                <div class="widget-header">Facility Task Manager <button class="action-btn-small" onclick="addTask()">+ New Task</button></div>
+                <div class="widget-header">Facility Task Manager</div>
                 <div class="task-controls">
                     <div class="task-tabs">
-                        <div class="task-tab active" id="tab-active" onclick="setTaskFilter('active')">Active Tasks</div>
-                        <div class="task-tab" id="tab-done" onclick="setTaskFilter('done')">Completed</div>
+                        <button class="task-tab active" id="tab-active" onclick="setTaskFilter('active')">Active Tasks</button>
+                        <button class="task-tab" id="tab-done" onclick="setTaskFilter('done')">Completed</button>
                     </div>
-                    <div style="display:flex; gap:12px;">
-                        <input type="text" id="task-input" placeholder="What needs to be done?">
-                        <select id="task-assignee" class="control-select"></select>
-                        <select id="task-severity" class="control-select"><option value="medium">Standard</option><option value="high">Priority</option></select>
+                    <div class="task-input-group">
+                        <input type="text" id="task-input" placeholder="What needs to be done? (Emojis allowed! 🚀)">
+                        <button class="btn-add-task" onclick="addTask()">Add</button>
                     </div>
                 </div>
                 <div id="task-list"></div>
@@ -409,9 +399,7 @@
             "https://api.dicebear.com/7.x/avataaars/svg?seed=Maint",
             "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
             "https://api.dicebear.com/7.x/avataaars/svg?seed=Max",
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna",
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Kiki",
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Leo"
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna"
         ];
 
         let staffData = JSON.parse(localStorage.getItem('office_staff_v1')) || [
@@ -439,14 +427,12 @@
 
         function renderStaffSelectors() {
             const container = document.getElementById('header-staff-selector');
-            const assignDropdown = document.getElementById('task-assignee');
             container.innerHTML = staffData.map((s, idx) => `
                 <button class="staff-chip ${idx === activeStaffIdx ? 'active' : ''}" onclick="setActiveStaff(${idx})">
                     <img src="${s.avatar}" class="avatar-small">
                     ${s.name}
                 </button>
             `).join('');
-            assignDropdown.innerHTML = staffData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         }
 
         function renderAvatarOptions() {
@@ -469,9 +455,9 @@
             }
         }
 
-        function toggleModal(show) {
-            document.getElementById('settings-modal').style.display = show ? 'flex' : 'none';
-            if(show) loadStaffDataForEdit();
+        function toggleModal(modalId, show) {
+            document.getElementById(modalId).style.display = show ? 'flex' : 'none';
+            if(show && modalId === 'settings-modal') loadStaffDataForEdit();
         }
 
         function loadStaffDataForEdit() {
@@ -495,7 +481,7 @@
             renderStaffSelectors();
             renderTasks();
             renderInquiries();
-            toggleModal(false);
+            toggleModal('settings-modal', false);
         }
 
         function setActiveStaff(idx) {
@@ -544,15 +530,11 @@
 
         function addTask() {
             const input = document.getElementById('task-input');
-            const assignId = parseInt(document.getElementById('task-assignee').value);
             if(!input.value.trim()) return;
             tasks.push({ 
                 id: Date.now(), 
                 text: input.value, 
-                severity: document.getElementById('task-severity').value, 
                 completed: false, 
-                creatorId: staffData[activeStaffIdx].id,
-                assigneeId: assignId, 
                 time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) 
             });
             input.value = "";
@@ -564,41 +546,48 @@
             const filtered = tasks.filter(t => taskFilter === 'active' ? !t.completed : t.completed);
             const list = document.getElementById('task-list');
             
-            list.innerHTML = filtered.map(t => {
-                const creator = staffData.find(s => s.id === t.creatorId) || staffData[0];
-                const assignee = staffData.find(s => s.id === t.assigneeId) || staffData[0];
-                const priorityClass = t.severity === 'high' ? 'priority-high' : 'priority-medium';
-                
-                return `
-                    <div class="task-item ${t.completed ? 'done' : ''} ${priorityClass} ${assignee.name === 'Maint' ? 'maint-assigned' : ''}">
-                        <div class="task-main">
-                            <div class="checkbox" onclick="toggleTask(${t.id})"></div>
-                            <div class="task-text">${t.text}</div>
-                            <div class="task-time">${t.time}</div>
-                            <div class="task-delete" onclick="deleteTask(${t.id})">×</div>
+            if (filtered.length === 0) {
+                if (taskFilter === 'active') {
+                    list.innerHTML = `
+                        <div class="empty-feed">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                <path d="m9 14 2 2 4-4"></path>
+                            </svg>
+                            <p>All Caught Up</p>
+                            <button class="empty-btn" onclick="document.getElementById('task-input').focus()">+ New Task</button>
                         </div>
-                        
-                        <div class="task-footer">
-                            <span class="team-label">Route</span>
-                            <div class="footer-actor">
-                                <img src="${creator.avatar}" class="avatar-small" style="width:16px; height:16px;">
-                                <span>${creator.name}</span>
-                            </div>
-                            <span style="color:#ddd; font-size:10px;">➔</span>
-                            <div class="footer-actor">
-                                <img src="${assignee.avatar}" class="avatar-small" style="width:16px; height:16px;">
-                                <span>${assignee.name}</span>
-                            </div>
-                        </div>
+                    `;
+                } else {
+                    list.innerHTML = ''; 
+                }
+            } else {
+                list.innerHTML = filtered.map(t => `
+                    <div class="task-item ${t.completed ? 'done' : ''}">
+                        <div class="checkbox" onclick="toggleTask(${t.id})"></div>
+                        <div class="task-text">${t.text}</div>
+                        <div class="task-time">${t.time}</div>
+                        <div class="task-delete" onclick="deleteTask(${t.id})">×</div>
                     </div>
-                `;
-            }).join('') || '<div style="font-size:0.8rem; color:#aaa; text-align:center; padding:20px;">No tasks found</div>';
+                `).join('');
+            }
         }
 
-        function resetDay() { if(confirm("Clear tallies?")) { inquiryData = { totalLeads:0, counts:{Phone:0, 'Walk-In':0, Email:0, Sitters:0, 'Turn-Around':0}, logs:[] }; renderInquiries(); } }
+        function confirmReset() {
+            inquiryData = { totalLeads:0, counts:{Phone:0, 'Walk-In':0, Email:0, Sitters:0, 'Turn-Around':0}, logs:[] }; 
+            renderInquiries(); 
+            toggleModal('reset-modal', false);
+        }
+
         function toggleTask(id) { const t = tasks.find(x => x.id === id); if(t) t.completed = !t.completed; renderTasks(); }
         function deleteTask(id) { tasks = tasks.filter(x => x.id !== id); renderTasks(); }
-        function setTaskFilter(f) { taskFilter = f; document.getElementById('tab-active').classList.toggle('active', f==='active'); document.getElementById('tab-done').classList.toggle('active', f==='done'); renderTasks(); }
+        function setTaskFilter(f) { 
+            taskFilter = f; 
+            document.getElementById('tab-active').classList.toggle('active', f==='active'); 
+            document.getElementById('tab-done').classList.toggle('active', f==='done'); 
+            renderTasks(); 
+        }
     </script>
 </body>
 </html>
