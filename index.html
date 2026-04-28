@@ -41,9 +41,9 @@
         .settings-trigger { cursor: pointer; display: flex; align-items: center; color: var(--brand-gray); transition: color 0.2s; }
         .settings-trigger:hover { color: var(--text-dark); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal { background: white; padding: 30px; border-radius: 12px; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 460px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-header { font-weight: 700; font-size: 1rem; margin-bottom: 20px; border-bottom: 2px solid var(--brand-yellow); padding-bottom: 10px; }
-        .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; max-height: 220px; overflow-y: auto; padding-right: 5px;}
+        .avatar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; max-height: 300px; overflow-y: auto; padding-right: 6px; scrollbar-width: thin; }
         .avatar-opt { width: 100%; aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: 0.2s; }
         .avatar-opt.selected { border-color: var(--brand-yellow); transform: scale(1.05); }
         .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
@@ -314,15 +314,31 @@
         // ── CONSTANTS ─────────────────────────────────────────────
         // Locate this section in your <script> tag
         const AVATARS = [
-            "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-            "https://cdn-icons-png.flaticon.com/512/147/147142.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168724.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168726.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168732.png",
-            "https://cdn-icons-png.flaticon.com/512/943/943579.png",
-            "https://cdn-icons-png.flaticon.com/512/190/190604.png",
-            "https://cdn-icons-png.flaticon.com/512/147/147140.png"
-            // Add as many Flaticon PNG URLs as you'd like here
+            // ── Animal Avatars — all confirmed free on flaticon.com ──
+            "https://cdn-icons-png.flaticon.com/512/8034/8034504.png", // Penguin    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063118.png", // Bear       (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/141/141803.png",   // Fox        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/141/141742.png",   // Koala      (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959921.png", // Puppy      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959951.png", // Elephant   (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959984.png", // Red Panda  (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2618/2618447.png", // Bunny      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1318/1318921.png", // Giraffe    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/8372/8372114.png", // Panda      (free)
+            "https://cdn-icons-png.flaticon.com/512/2315/2315502.png", // Wolf       (free)
+            "https://cdn-icons-png.flaticon.com/512/1757/1757017.png", // Lion       (free)
+            "https://cdn-icons-png.flaticon.com/512/3195/3195978.png", // Monkey     (free)
+            "https://cdn-icons-png.flaticon.com/512/103/103323.png",   // Owl        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/4775/4775505.png", // Rabbit     (free)
+            "https://cdn-icons-png.flaticon.com/512/578/578423.png",   // Panda Bear (free)
+            "https://cdn-icons-png.flaticon.com/512/2173/2173478.png", // Cat        (free)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998713.png", // Lion 2     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998804.png", // Tiger      (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063181.png", // Lion 3     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053574.png", // Dog        (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053787.png", // Dog 2      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/11957/11957797.png", // Tiger 2  (RIkas Dzihab)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998592.png", // Cat 2      (Flat Icons)
         ];
 
         const DEFAULT_STAFF = [
@@ -333,7 +349,7 @@
 
         // ── LOCAL STATE (UI only, not persisted) ──────────────────
         let staffData        = DEFAULT_STAFF;
-        let activeStaffIdx   = 0;
+        let activeStaffIdx   = Number(localStorage.getItem('activeStaffIdx') || 0);
         let selectedAvatarUrl = staffData[0].avatar;
         let taskFilter       = 'active';
         let tasks            = [];
@@ -365,6 +381,7 @@
                 }
                 staffData = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                     .sort((a, b) => a.id.localeCompare(b.id));
+                if (activeStaffIdx > staffData.length - 1) activeStaffIdx = 0;
                 renderStaffSelectors();
                 renderAvatarOptions();
                 renderTasks(); // tasks reference staff names
@@ -397,7 +414,7 @@
                     <img src="${s.avatar}" class="avatar-small"> ${s.name}
                 </button>`).join('');
         }
-        window.setActiveStaff = idx => { activeStaffIdx = idx; renderStaffSelectors(); };
+        window.setActiveStaff = idx => { activeStaffIdx = idx; localStorage.setItem('activeStaffIdx', String(idx)); renderStaffSelectors(); };
 
         function renderAvatarOptions() {
             document.getElementById('avatar-options').innerHTML = AVATARS.map(url => `

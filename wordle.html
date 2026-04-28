@@ -699,14 +699,8 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .modal-actions > button { flex: 1; }
 
-        .result-score { font-size: 3rem; line-height: 1; font-weight: 700; color: var(--text-dark); text-align: center; transition: color 0.3s; }
-        .result-score.win { color: var(--wordle-green); }
-        .result-headline { font-size: 1.1rem; font-weight: 700; text-align: center; color: var(--wordle-green); margin-bottom: 2px; min-height: 1.4em; }
-        .result-label { text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 16px; }
 
-        .score-breakdown { display: grid; gap: 6px; margin-top: 12px; }
-        .score-breakdown div { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.82rem; color: var(--text-muted); }
-        .score-breakdown strong { color: var(--text-dark); }
+        .result-headline { font-size: 1.1rem; font-weight: 700; text-align: center; color: var(--wordle-green); margin-bottom: 12px; min-height: 1.4em; }
 
         .confetti-container {
             position: absolute;
@@ -910,10 +904,7 @@
             <div class="confetti-container" id="confetti-container"></div>
             <div class="modal-header" id="result-title">Game Complete</div>
             <div class="result-headline" id="result-headline"></div>
-            <div class="result-score" id="result-score">0</div>
-            <div class="result-label">Points Earned</div>
             <p class="modal-copy" id="result-copy"></p>
-            <div class="score-breakdown" id="score-breakdown"></div>
             <div class="modal-actions">
                 <button class="action-btn-small btn-blue" onclick="startAnotherGame()">Play Again</button>
                 <button class="action-btn-small btn-muted" onclick="toggleModal('result-modal', false)">Close</button>
@@ -1027,21 +1018,131 @@
         ];
 
         const ANSWERS = {
-            5: ["CRANE", "PLANT", "BRICK", "SHORE", "LIGHT", "MOUSE", "TRAIN", "CLOUD", "STORE", "WATER", "CHAIR", "FIELD", "SMILE", "ROUTE", "SPICE"],
-            6: ["PLANET", "CASTLE", "BRIDGE", "GARDEN", "MARKET", "ROCKET", "BUTTON", "STREAM", "WINDOW", "POCKET", "CANDLE", "FOREST"],
-            7: ["STORAGE", "PICTURE", "COUNTER", "MORNING", "BALANCE", "FREIGHT", "CAPTURE", "JOURNEY", "LIBRARY", "FARMING"],
-            8: ["FACILITY", "KEYBOARD", "NOTEBOOK", "BASEMENT", "CUSTOMER", "TREASURE", "BACKPACK", "ELEVATOR"],
-            9: ["DASHBOARD", "CROSSWORD", "ADVENTURE", "WAREHOUSE", "BLUEPRINT", "SELECTION", "WORKSPACE"],
-            10: ["MAINTENANCE", "MANAGEMENT", "WORDSEARCH", "BACKGROUND", "NAVIGATION", "LEADERBOARD"]
+            5: [
+                // Original
+                "CRANE", "PLANT", "BRICK", "SHORE", "LIGHT", "MOUSE", "TRAIN", "CLOUD", "STORE", "WATER",
+                "CHAIR", "FIELD", "SMILE", "ROUTE", "SPICE",
+                // Facility / building / property themed
+                "VAULT", "LEASE", "FLOOR", "CLEAN", "DRAIN", "PANEL", "SHELF", "HINGE", "LATCH", "GROUT",
+                "ALARM", "GAUGE", "VALVE", "CHUTE", "CABLE", "SOLAR", "METER", "PUMPS", "PIPES", "GLAZE",
+                "BOLTS", "PLUMB", "REBAR", "SPRAY", "WIRES", "LODGE", "ENTRY", "LOBBY", "INLET", "DEPOT",
+                "CARGO", "BALER", "FORKY", "CRATE", "DOLLY", "LINER", "GUARD", "BADGE", "STAFF",
+                // Strong everyday Wordle words
+                "BRAVE", "CLOCK", "DRIVE", "EAGLE", "FENCE", "GRACE", "HOTEL", "INNER", "JOKER", "KNIFE",
+                "LOVER", "MAPLE", "NORTH", "OFFER", "PRICE", "QUEEN", "RIDER", "SCALE", "TABLE", "ULTRA",
+                "VALUE", "WASTE", "EXTRA", "YACHT", "ZONES", "ADAPT", "BLEND", "CRAFT", "DRAFT", "ELECT",
+                "FROST", "GRAFT", "HOIST", "INPUT", "JOINT", "KNACK", "LAPSE", "MOIST", "NOTED", "ONSET",
+                "PATCH", "QUOTE", "REACH", "SCOUT", "SWEPT", "TEACH", "UNIFY", "VAGUE", "WATCH", "YIELD"
+            ],
+            6: [
+                // Original
+                "PLANET", "CASTLE", "BRIDGE", "GARDEN", "MARKET", "ROCKET", "BUTTON", "STREAM", "WINDOW", "POCKET",
+                "CANDLE", "FOREST",
+                // Facility / building / property themed
+                "LOCKER", "TENANT", "OFFICE", "INTAKE", "RENTAL", "ACCESS", "FILING", "PALLET", "SAFETY", "FILTER",
+                "BOILER", "FAUCET", "GRAVEL", "MORTAR", "TROWEL", "GUTTER", "COPING", "FASCIA", "SADDLE", "DAMPER",
+                "SWITCH", "OUTLET", "FUSING", "FLANGE", "GASKET", "SHROUD", "LINTEL", "CLOSER",
+                "BARREL", "PARCEL", "BUNDLE", "PAVING", "LINING", "CASING", "SIDING", "BREECH", "SPACER", "RACKET",
+                // Strong everyday Wordle words
+                "BATTLE", "CEMENT", "DOUBLE", "FINGER", "GENTLE", "HARBOR", "INSECT", "JUNGLE", "KERNEL", "LUSTER",
+                "MIRROR", "NATURE", "OPTION", "PILLAR", "QUAINT", "RAFTER", "SAMPLE", "TANGLE", "UNFOLD", "VANISH",
+                "WANDER", "EXPAND", "YEARLY", "ZIPPER", "ANCHOR", "BORDER", "COLUMN", "DETAIL", "EMERGE", "FACTOR",
+                "GATHER", "HUMBLE", "INSURE", "JUNIOR", "KINDLY", "LIVELY", "MUSTER", "NESTLE", "OPENLY", "PLUNGE",
+                "REPAIR", "SILVER", "TIMBER", "UNLOCK", "VENDOR", "WARREN", "EXPORT", "YELLOW", "ZONING", "ADJUST"
+            ],
+            7: [
+                // Original
+                "STORAGE", "PICTURE", "COUNTER", "MORNING", "BALANCE", "FREIGHT", "CAPTURE", "JOURNEY", "LIBRARY", "FARMING",
+                // Facility / building / property themed
+                "GATEWAY", "MANAGER", "SHELTER", "HALLWAY", "CEILING", "CONDUIT", "FIXTURE", "CABINET", "CONSOLE", "LOADING",
+                "PACKAGE", "LOCKBOX", "CLIPPER", "HOISTED", "RIGGING", "STAGING", "BOLTING", "WELDING", "COATING", "SEALING",
+                "ROOFING", "CABLING", "WALKWAY", "DOORWAY", "PATHWAY", "RAFTERS", "STACKED", "SIGNAGE", "PARKING", "BILLING",
+                "ACCOUNT", "INVOICE", "RECEIPT", "PAYMENT", "SERVICE", "INSPECT", "REPLACE", "INSTALL", "RESTORE", "UPGRADE",
+                // Strong everyday Wordle words
+                "ABANDON", "BENEFIT", "COUNCIL", "DISTANT", "ENFORCE", "FURNISH", "HARVEST", "IMAGINE", "JUSTICE", "KINGDOM",
+                "LASTING", "MINIMUM", "NOTABLY", "OUTPOST", "PROGRAM", "QUALIFY", "READILY", "TEXTURE", "TENSION", "UNCOVER",
+                "VIBRANT", "WARRANT", "EXCLUDE", "YOUNGER", "ZEALOUS", "ACHIEVE", "BRIGADE", "CAPABLE", "DEFENSE", "ELEMENT"
+            ],
+            8: [
+                // Original
+                "FACILITY", "KEYBOARD", "NOTEBOOK", "BASEMENT", "CUSTOMER", "TREASURE", "BACKPACK", "ELEVATOR",
+                // Facility / building / property themed
+                "MOVEOUTS", "TURNOVER", "OCCUPANT", "LANDLORD", "HANDOVER", "CHECKOUT", "LOCKDOWN", "SECURITY",
+                "OVERHEAD", "SUPPLIES", "CONVEYOR", "SCAFFOLD", "DRAINAGE", "VENTDUCT", "SHUTOFFS", "JUNCTION", "CONDUITS",
+                "CIRCUITS", "SWITCHES", "WARRANTY", "CONTRACT", "DISPATCH", "DELIVERY", "MANIFEST", "SHIPPING", "TRACKING",
+                "LABELING", "SCANNING", "STACKING", "SHELVING", "MOUNTING", "ASSEMBLY", "SERVICED", "REPAIRED", "REPLACED",
+                // Strong everyday Wordle words
+                "ABSOLUTE", "BOUNDARY", "COHERENT", "DOMESTIC", "ENTRANCE", "FORMLESS", "GRACEFUL", "HANDBOOK", "INSTANCE",
+                "JUDGMENT", "KNIGHTED", "LOCKSTEP", "MOVEMENT", "NORTHERN", "OBSERVED", "PLATFORM", "QUESTION", "RELEVANT",
+                "STANDARD", "THANKFUL", "ULTIMATE", "VALUABLE", "WATCHFUL", "EXPERTLY", "YOURSELF", "ADVANCED", "BLISSFUL",
+                "COMPLETE", "DETAILED", "ESTIMATE", "FEATURED", "GRATEFUL", "HARDWORK", "IDENTIFY", "MAINTAIN"
+            ],
+            9: [
+                // Original
+                "DASHBOARD", "CROSSWORD", "ADVENTURE", "WAREHOUSE", "BLUEPRINT", "SELECTION", "WORKSPACE",
+                // Facility / building / property themed
+                "INQUIRIES", "WORKORDER", "CHECKOUTS", "MOVEORDER", "INVENTORY", "CONTRACTS", "OVERHEADS", "UTILITIES",
+                "CARPENTRY", "PAINTWORK", "CARPETING", "TILEFLOOR", "WALLPANEL", "ROOFTILES", "DOORFRAME",
+                "FIREBREAK", "SPRINKLER", "FLOODGATE", "STAIRWELL", "PLUMBWORK", "EMERGENCY", "SIGNBOARD", "SAFEGUARD", "GUARDPOST",
+                "RECEPTION", "FRONTDESK", "SCHEDULER", "CHECKLIST", "CALLBACKS", "DOCUMENTS", "REPORTING", "HANDBOOKS",
+                // Strong everyday Wordle words
+                "CAREFULLY", "DIRECTION", "EMOTIONAL", "FRAMEWORK", "GRADUALLY", "HONORABLE", "IMPERFECT", "JUSTIFIED",
+                "KNOWLEDGE", "LANDSCAPE", "MOMENTARY", "NOVELTIES", "ORGANIZED", "PRECISELY", "QUALIFIED", "REPRESENT",
+                "STRUCTURE", "TYPICALLY", "UNIFORMLY", "VARIATION", "EXCELLENT", "YESTERDAY", "WORKFORCE", "ASSERTION",
+                "BUILDINGS", "COMMUNITY", "DEDICATED", "EFFICIENT", "FINANCIAL", "GUARANTEE", "HIGHLIGHT", "IMPORTANT"
+            ],
+            10: [
+                // Original
+                "MANAGEMENT", "WORDSEARCH", "BACKGROUND", "NAVIGATION", "STATIONARY",
+                // Facility / building / property themed
+                "INSPECTION", "GROUNDWORK", "RENOVATION", "COMPLIANCE", "ESTIMATION", "COMPLETION", "REGULATION",
+                "OCCUPATION", "CONTRACTOR", "ASSESSMENT", "RELOCATION", "PERMISSION", "TRANSITION", "EVACUATION",
+                "PROPERTIES", "COMMERCIAL", "INDUSTRIAL", "STRUCTURAL", "MECHANICAL", "ELECTRICAL", "INSULATION",
+                "FOUNDATION", "REMODELING", "FILTRATION", "VENTILATED", "VENTILATOR", "CONTROLLED", "SUPERVISED",
+                // Strong everyday Wordle words
+                "ABSOLUTELY", "BENEFICIAL", "COMPONENTS", "DEDICATION", "ENORMOUSLY", "FREQUENTLY", "GUARANTEED",
+                "HOSPITABLE", "INCREASING", "JOURNALISM", "KNOWLEDGES", "LIEUTENANT", "MEANINGFUL", "NOTEWORTHY",
+                "OUTPERFORM", "PRODUCTIVE", "QUESTIONED", "REASONABLE", "SEPARATELY", "THREADBARE", "UNDERSTOOD",
+                "VISIBILITY", "EXHAUSTING", "YOURSELVES", "ADJUSTMENT", "BRIGHTNESS", "CHALLENGES",
+                "DIRECTIONS", "FULFILLING", "HARMONIOUS", "IDENTIFIED", "JOURNEYMAN", "SYSTEMATIC"
+            ]
         };
 
         const HAND_AUTHORED = {
-            5: ["VAULT", "LEASE", "UNITS"],
-            6: ["LOCKER", "TENANT", "OFFICE"],
-            7: ["GATEWAY", "STORAGE", "MANAGER"],
-            8: ["FACILITY", "CUSTOMER", "MOVEOUTS"],
-            9: ["DASHBOARD", "INQUIRIES", "WORKORDER"],
-            10: ["MAINTENANCE", "LEADERBOARD", "RESERVATION"]
+            5: [
+                "VAULT", "LEASE", "UNITS", "CLEAN", "STORE", "FLOOR", "DRAIN", "LATCH", "ALARM", "GAUGE",
+                "VALVE", "CABLE", "METER", "BOLTS", "ENTRY", "LOBBY", "DEPOT", "CARGO", "CRANE", "GUARD"
+            ],
+            6: [
+                "LOCKER", "TENANT", "OFFICE", "INTAKE", "RENTAL", "ACCESS", "FILING", "SAFETY", "FILTER",
+                "BOILER", "FAUCET", "GRAVEL", "MORTAR", "TROWEL", "GUTTER", "SWITCH", "OUTLET", "BARREL",
+                "PARCEL", "BUNDLE", "PAVING", "LINING", "CASING", "SIDING", "REPAIR", "VENDOR", "ZONING"
+            ],
+            7: [
+                "GATEWAY", "STORAGE", "MANAGER", "SHELTER", "HALLWAY", "CEILING", "CONDUIT", "FIXTURE",
+                "CABINET", "LOADING", "PACKAGE", "LOCKBOX", "STAGING", "COATING", "SEALING", "ROOFING",
+                "WALKWAY", "PATHWAY", "SIGNAGE", "PARKING", "BILLING", "ACCOUNT", "INVOICE", "SERVICE",
+                "INSPECT", "REPLACE", "INSTALL", "RESTORE", "UPGRADE"
+            ],
+            8: [
+                "FACILITY", "CUSTOMER", "MOVEOUTS", "TURNOVER", "OCCUPANT", "LANDLORD", "CHECKOUT", "LOCKDOWN",
+                "SECURITY", "OVERHEAD", "SUPPLIES", "DRAINAGE", "CIRCUITS", "SWITCHES", "WARRANTY", "CONTRACT",
+                "DISPATCH", "DELIVERY", "MANIFEST", "SHIPPING", "TRACKING", "LABELING", "SCANNING", "STACKING",
+                "SHELVING", "MOUNTING", "ASSEMBLY"
+            ],
+            9: [
+                "DASHBOARD", "INQUIRIES", "WORKORDER", "CHECKOUTS", "INVENTORY", "CONTRACTS", "OVERHEADS",
+                "UTILITIES", "CARPENTRY", "PAINTWORK", "CARPETING", "STAIRWELL", "EMERGENCY", "SIGNBOARD",
+                "SAFEGUARD", "RECEPTION", "CHECKLIST", "DOCUMENTS", "REPORTING", "BUILDINGS", "DEDICATED",
+                "EFFICIENT", "WAREHOUSE", "BLUEPRINT", "WORKSPACE"
+            ],
+            10: [
+                "INSPECTION", "GROUNDWORK", "RENOVATION", "COMPLIANCE", "REMODELING",
+                "ESTIMATION", "COMPLETION", "REGULATION", "OCCUPATION", "CONTRACTOR", "ASSESSMENT",
+                "RELOCATION", "PERMISSION", "TRANSITION", "PROPERTIES", "COMMERCIAL", "INDUSTRIAL",
+                "STRUCTURAL", "MECHANICAL", "ELECTRICAL", "INSULATION", "FOUNDATION", "FILTRATION",
+                "MANAGEMENT", "NAVIGATION"
+            ]
         };
 
         const MODE_LABELS = {
@@ -1052,13 +1153,6 @@
             timeTrial: "Trial"
         };
 
-        const MODE_BONUS = {
-            daily: 50,
-            random: 0,
-            handAuthored: 25,
-            marathon: 75,
-            timeTrial: 100
-        };
 
         const MAX_ATTEMPTS = 6;
         const TIME_TRIAL_SECONDS = 180;
@@ -1292,7 +1386,7 @@
             updateControls();
             renderStatsPanel();
 
-            document.getElementById('daily-complete-copy').textContent = `You already solved today’s Daily Wordle in ${result.attemptsUsed}/${result.maxAttempts || MAX_ATTEMPTS} guesses for ${result.score || 0} points. Your solved board is shown here.`;
+            document.getElementById('daily-complete-copy').textContent = `You already solved today’s Daily Wordle in ${result.attemptsUsed}/${result.maxAttempts || MAX_ATTEMPTS} guesses. Your solved board is shown here.`;
             toggleModal('daily-complete-modal', true);
         }
 
@@ -1742,14 +1836,6 @@
             const state = currentSession.gameState;
             const attemptsUsed = state.guesses.length;
             const timeSeconds = Number(state.timeSeconds || 0);
-            const breakdown = calculateWordleScore({
-                won,
-                attemptsUsed,
-                maxAttempts: currentSession.maxAttempts,
-                timeSeconds,
-                wordLength: currentSession.wordLength,
-                mode: currentSession.mode
-            });
 
             return {
                 version: 1,
@@ -1766,47 +1852,17 @@
                 maxAttempts: currentSession.maxAttempts,
                 timeSeconds,
                 guesses: [...state.guesses],
-                score: breakdown.total,
-                scoreBreakdown: breakdown,
-                completedAt: Date.now(),
-                dailyKey: currentSession.mode === 'daily' ? getDailyKey() : null
+                completedAt: Date.now()
             };
-        }
-
-        function calculateWordleScore(result) {
-            if (!result.won) {
-                return {
-                    base: 10,
-                    attemptBonus: 0,
-                    speedBonus: 0,
-                    lengthBonus: 0,
-                    modeBonus: 0,
-                    total: 10
-                };
-            }
-
-            const base = 100;
-            const attemptBonus = Math.max(0, (result.maxAttempts - result.attemptsUsed) * 20);
-            const speedBonus = Math.max(0, 300 - result.timeSeconds);
-            const lengthBonus = Math.max(0, (result.wordLength - 5) * 25);
-            const modeBonus = MODE_BONUS[result.mode] || 0;
-            const total = Math.max(0, base + attemptBonus + speedBonus + lengthBonus + modeBonus);
-
-            return { base, attemptBonus, speedBonus, lengthBonus, modeBonus, total };
         }
 
         async function saveCompletedResult(result) {
             try {
                 await addDoc(collection(db, 'gameResultHistory_live'), result);
 
-                const summaryRef = doc(db, 'gameResults_live', result.staffId);
-                const snap = await getDoc(summaryRef);
-                const existing = snap.exists() ? snap.data() : {};
-                const wordle = normalizeWordleSummary(existing.wordle);
+                const wordle = normalizeWordleSummary(staffWordleSummary);
 
                 wordle.gamesPlayed += 1;
-                wordle.totalScore += result.score;
-                wordle.bestScore = Math.max(wordle.bestScore || 0, result.score);
                 wordle.lastPlayedAt = result.completedAt;
 
                 if (result.won) {
@@ -1823,11 +1879,8 @@
                     wordle.currentStreak = 0;
                 }
 
-                await setDoc(summaryRef, {
-                    ...existing,
-                    wordle,
-                    updatedAt: Date.now()
-                }, { merge: true });
+                const summaryRef = doc(db, 'gameResults_live', result.staffId);
+                await setDoc(summaryRef, { wordle, updatedAt: Date.now() }, { merge: true });
 
                 localHistory.unshift(result);
                 localHistory = localHistory.slice(0, 8);
@@ -1842,8 +1895,6 @@
                 gamesPlayed: 0,
                 wins: 0,
                 losses: 0,
-                totalScore: 0,
-                bestScore: 0,
                 bestTimeSeconds: 0,
                 bestAttempts: 0,
                 currentStreak: 0,
@@ -1867,8 +1918,6 @@
                 gamesPlayed: safeNumber(source.gamesPlayed),
                 wins: safeNumber(source.wins),
                 losses: safeNumber(source.losses),
-                totalScore: safeNumber(source.totalScore),
-                bestScore: safeNumber(source.bestScore),
                 bestTimeSeconds: safeNumber(source.bestTimeSeconds),
                 bestAttempts: safeNumber(source.bestAttempts),
                 currentStreak: safeNumber(source.currentStreak),
@@ -1897,20 +1946,9 @@
 
             document.getElementById('result-title').textContent = result.won ? '🎉 You Won!' : 'Game Over';
             document.getElementById('result-headline').textContent = headline;
-            document.getElementById('result-score').textContent = result.score;
-            document.getElementById('result-score').className = result.won ? 'result-score win' : 'result-score';
             document.getElementById('result-copy').textContent = result.won
                 ? `Solved ${result.answer} in ${result.attemptsUsed}/${result.maxAttempts} attempts as ${result.staffName}.`
-                : `The answer was ${result.answer}. A participation score was recorded for ${result.staffName}.`;
-
-            const b = result.scoreBreakdown;
-            document.getElementById('score-breakdown').innerHTML = `
-                <div><span>Base</span><strong>${b.base}</strong></div>
-                <div><span>Attempt bonus</span><strong>${b.attemptBonus}</strong></div>
-                <div><span>Speed bonus</span><strong>${b.speedBonus}</strong></div>
-                <div><span>Length bonus</span><strong>${b.lengthBonus}</strong></div>
-                <div><span>Mode bonus</span><strong>${b.modeBonus}</strong></div>
-            `;
+                : `The answer was ${result.answer}. Better luck next time, ${result.staffName}!`;
 
             toggleModal('result-modal', true);
 
@@ -2104,8 +2142,6 @@
                 <div class="stats-line"><span>Games played</span><strong>${summary.gamesPlayed}</strong></div>
                 <div class="stats-line"><span>Wins</span><strong>${summary.wins}</strong></div>
                 <div class="stats-line"><span>Losses</span><strong>${summary.losses}</strong></div>
-                <div class="stats-line"><span>Total score</span><strong>${summary.totalScore}</strong></div>
-                <div class="stats-line"><span>Best score</span><strong>${summary.bestScore}</strong></div>
                 <div class="stats-line"><span>Best time</span><strong>${formatTime(summary.bestTimeSeconds)}</strong></div>
             `;
 
@@ -2114,7 +2150,7 @@
             document.getElementById('history-list').innerHTML = history.map(item => `
                 <div class="history-item ${item.won ? 'win' : 'loss'}">
                     <span>${item.won ? '✅' : '❌'} ${item.mode} · ${item.wordLength}L · ${item.won ? 'Win' : 'Loss'}</span>
-                    <strong>${item.score}</strong>
+                    <strong>${item.attemptsUsed}/${item.maxAttempts}</strong>
                 </div>
             `).join('') || `<div class="history-item"><span>Completed games will appear here this session.</span></div>`;
         }

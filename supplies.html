@@ -204,9 +204,31 @@
         const db  = getFirestore(app);
 
         const AVATARS = [
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Staff1",
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Staff2",
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Maint"
+            // ── Animal Avatars — all confirmed free on flaticon.com ──
+            "https://cdn-icons-png.flaticon.com/512/8034/8034504.png", // Penguin    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063118.png", // Bear       (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/141/141803.png",   // Fox        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/141/141742.png",   // Koala      (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959921.png", // Puppy      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959951.png", // Elephant   (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959984.png", // Red Panda  (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2618/2618447.png", // Bunny      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1318/1318921.png", // Giraffe    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/8372/8372114.png", // Panda      (free)
+            "https://cdn-icons-png.flaticon.com/512/2315/2315502.png", // Wolf       (free)
+            "https://cdn-icons-png.flaticon.com/512/1757/1757017.png", // Lion       (free)
+            "https://cdn-icons-png.flaticon.com/512/3195/3195978.png", // Monkey     (free)
+            "https://cdn-icons-png.flaticon.com/512/103/103323.png",   // Owl        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/4775/4775505.png", // Rabbit     (free)
+            "https://cdn-icons-png.flaticon.com/512/578/578423.png",   // Panda Bear (free)
+            "https://cdn-icons-png.flaticon.com/512/2173/2173478.png", // Cat        (free)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998713.png", // Lion 2     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998804.png", // Tiger      (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063181.png", // Lion 3     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053574.png", // Dog        (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053787.png", // Dog 2      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/11957/11957797.png", // Tiger 2  (RIkas Dzihab)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998592.png", // Cat 2      (Flat Icons)
         ];
 
         const DEFAULT_STAFF = [
@@ -223,7 +245,7 @@
         ];
 
         let staffData    = DEFAULT_STAFF;
-        let activeStaffIdx = 0;
+        let activeStaffIdx = Number(localStorage.getItem('activeStaffIdx') || 0);
         let catalog      = [];
         let shoppingList = [];
 
@@ -248,6 +270,7 @@
                 }
                 staffData = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                     .sort((a, b) => a.id.localeCompare(b.id));
+                if (activeStaffIdx > staffData.length - 1) activeStaffIdx = 0;
                 renderStaff();
             });
         }
@@ -281,7 +304,7 @@
                     <img src="${s.avatar}" class="avatar-small"> ${s.name}
                 </button>`).join('');
         }
-        window.setStaff = idx => { activeStaffIdx = idx; renderStaff(); };
+        window.setStaff = idx => { activeStaffIdx = idx; localStorage.setItem('activeStaffIdx', String(idx)); renderStaff(); };
 
         // ── CATALOG ───────────────────────────────────────────────
         function renderCatalog() {

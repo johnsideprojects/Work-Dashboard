@@ -251,7 +251,7 @@
 
         .games-layout {
             display: grid;
-            grid-template-columns: 1.35fr 0.9fr;
+            grid-template-columns: 1fr;
             gap: 20px;
         }
 
@@ -282,7 +282,7 @@
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 14px;
         }
 
@@ -373,119 +373,6 @@
             text-decoration: none;
         }
 
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .leader-row {
-            display: grid;
-            grid-template-columns: 34px 1fr auto;
-            align-items: center;
-            gap: 12px;
-            padding: 13px;
-            border-radius: 9px;
-            background: #fafafa;
-            border: 1px solid #eee;
-        }
-
-        .leader-row.current-user {
-            background: #fff8d6;
-            border-color: var(--brand-yellow);
-            box-shadow: inset 4px 0 0 var(--brand-yellow);
-        }
-
-        .rank {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--brand-gray);
-        }
-
-        .rank.gold {
-            background: var(--brand-yellow);
-            color: #1a1a00;
-        }
-
-        .leader-main {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-        }
-
-        .leader-main img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #ddd;
-            flex-shrink: 0;
-        }
-
-        .leader-name {
-            font-weight: 700;
-            line-height: 1.1;
-        }
-
-        .leader-sub {
-            color: var(--text-subtle);
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        .leader-score {
-            text-align: right;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--text-dark);
-        }
-
-        .leader-score span {
-            display: block;
-            font-size: 0.62rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            line-height: 1;
-        }
-
-        .test-panel {
-            margin-top: 18px;
-            background: #fcfcfc;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 14px;
-        }
-
-        .test-panel-title {
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--brand-gray);
-            margin-bottom: 6px;
-        }
-
-        .test-panel-note {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .test-buttons {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-        }
 
         .action-btn-small {
             background: var(--brand-yellow);
@@ -509,24 +396,6 @@
             border: 1px solid #f5c6c2;
         }
 
-        .stats-box {
-            margin-top: 15px;
-            border-top: 1px dashed #ddd;
-            padding-top: 12px;
-        }
-
-        .stats-line {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            padding: 4px 0;
-        }
-
-        .stats-line strong {
-            color: var(--text-dark);
-        }
 
         .modal-overlay {
             position: fixed;
@@ -545,7 +414,7 @@
             background: white;
             padding: 30px;
             border-radius: 12px;
-            width: 400px;
+            width: 460px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
@@ -577,12 +446,13 @@
 
         .avatar-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
             margin: 15px 0;
-            max-height: 220px;
+            max-height: 300px;
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: 6px;
+            scrollbar-width: thin;
         }
 
         .avatar-opt {
@@ -627,10 +497,6 @@
         }
 
         @media (max-width: 1200px) {
-            .games-layout {
-                grid-template-columns: 1fr;
-            }
-
             .sidenav {
                 position: relative;
                 width: 100%;
@@ -773,7 +639,7 @@
                             <div class="game-icon">W</div>
                             <div>
                                 <div class="game-title">Wordle</div>
-                                <div class="game-desc">Daily word puzzle with staff sessions, autosave, scoring, and leaderboard support.</div>
+                                <div class="game-desc">Daily word puzzle with staff sessions, autosave, and rival avatar tracking.</div>
                                 <div class="game-meta">
                                     <span class="pill available">Ready</span>
                                     <span class="pill">Word Game</span>
@@ -812,7 +678,7 @@
                             <div class="game-icon">+</div>
                             <div>
                                 <div class="game-title">More Games</div>
-                                <div class="game-desc">Future games can plug into the same leaderboard and history system.</div>
+                                <div class="game-desc">Future games can plug into the same shared staff session system.</div>
                                 <div class="game-meta">
                                     <span class="pill">Future</span>
                                 </div>
@@ -822,17 +688,6 @@
                     </div>
                 </section>
 
-                <aside class="widget">
-                    <div class="widget-header">Overall Leaderboard</div>
-
-                    <div class="leaderboard-list" id="leaderboard-list"></div>
-
-                    <div class="test-panel production-summary">
-                        <div class="test-panel-title">Current Player Summary</div>
-                        <div class="test-panel-note">Stats appear here after completed games are saved.</div>
-                        <div class="stats-box" id="current-player-stats"></div>
-                    </div>
-                </aside>
             </div>
         </main>
     </div>
@@ -861,14 +716,31 @@
         const db  = getFirestore(app);
 
         const AVATARS = [
-            "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-            "https://cdn-icons-png.flaticon.com/512/147/147142.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168724.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168726.png",
-            "https://cdn-icons-png.flaticon.com/512/168/168732.png",
-            "https://cdn-icons-png.flaticon.com/512/943/943579.png",
-            "https://cdn-icons-png.flaticon.com/512/190/190604.png",
-            "https://cdn-icons-png.flaticon.com/512/147/147140.png"
+            // ── Animal Avatars — all confirmed free on flaticon.com ──
+            "https://cdn-icons-png.flaticon.com/512/8034/8034504.png", // Penguin    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063118.png", // Bear       (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/141/141803.png",   // Fox        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/141/141742.png",   // Koala      (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959921.png", // Puppy      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959951.png", // Elephant   (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959984.png", // Red Panda  (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2618/2618447.png", // Bunny      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1318/1318921.png", // Giraffe    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/8372/8372114.png", // Panda      (free)
+            "https://cdn-icons-png.flaticon.com/512/2315/2315502.png", // Wolf       (free)
+            "https://cdn-icons-png.flaticon.com/512/1757/1757017.png", // Lion       (free)
+            "https://cdn-icons-png.flaticon.com/512/3195/3195978.png", // Monkey     (free)
+            "https://cdn-icons-png.flaticon.com/512/103/103323.png",   // Owl        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/4775/4775505.png", // Rabbit     (free)
+            "https://cdn-icons-png.flaticon.com/512/578/578423.png",   // Panda Bear (free)
+            "https://cdn-icons-png.flaticon.com/512/2173/2173478.png", // Cat        (free)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998713.png", // Lion 2     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998804.png", // Tiger      (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063181.png", // Lion 3     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053574.png", // Dog        (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053787.png", // Dog 2      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/11957/11957797.png", // Tiger 2  (RIkas Dzihab)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998592.png", // Cat 2      (Flat Icons)
         ];
 
         const DEFAULT_STAFF = [
@@ -877,63 +749,13 @@
             { id: "staff2", name: "Maint",   avatar: AVATARS[2] }
         ];
 
-        const DEFAULT_GAME_RESULTS = {
-            wordle: {
-                gamesPlayed: 0,
-                wins: 0,
-                losses: 0,
-                totalScore: 0,
-                bestScore: 0,
-                bestTimeSeconds: 0,
-                bestAttempts: 0,
-                currentStreak: 0,
-                bestStreak: 0
-            },
-            crossword: {
-                completed: 0,
-                totalScore: 0,
-                bestTimeSeconds: 0
-            },
-            wordSearch: {
-                completed: 0,
-                totalScore: 0,
-                bestTimeSeconds: 0
-            }
-        };
-
-        function safeNumber(value, fallback = 0) {
-            const number = Number(value);
-            return Number.isFinite(number) ? number : fallback;
-        }
-
-        function normalizeGameResults(data) {
-            const merged = mergeGameResults(data || {});
-            merged.wordle.gamesPlayed = safeNumber(merged.wordle.gamesPlayed);
-            merged.wordle.wins = safeNumber(merged.wordle.wins);
-            merged.wordle.losses = safeNumber(merged.wordle.losses);
-            merged.wordle.totalScore = safeNumber(merged.wordle.totalScore);
-            merged.wordle.bestScore = safeNumber(merged.wordle.bestScore);
-            merged.wordle.bestTimeSeconds = safeNumber(merged.wordle.bestTimeSeconds);
-            merged.wordle.bestAttempts = safeNumber(merged.wordle.bestAttempts);
-            merged.wordle.currentStreak = safeNumber(merged.wordle.currentStreak);
-            merged.wordle.bestStreak = safeNumber(merged.wordle.bestStreak);
-            merged.crossword.completed = safeNumber(merged.crossword.completed);
-            merged.crossword.totalScore = safeNumber(merged.crossword.totalScore);
-            merged.crossword.bestTimeSeconds = safeNumber(merged.crossword.bestTimeSeconds);
-            merged.wordSearch.completed = safeNumber(merged.wordSearch.completed);
-            merged.wordSearch.totalScore = safeNumber(merged.wordSearch.totalScore);
-            merged.wordSearch.bestTimeSeconds = safeNumber(merged.wordSearch.bestTimeSeconds);
-            return merged;
-        }
 
         let staffData = DEFAULT_STAFF;
         let activeStaffIdx = Number(localStorage.getItem('activeStaffIdx') || 0);
         let selectedAvatarUrl = staffData[0].avatar;
-        let gameResults = {};
 
         window.addEventListener('DOMContentLoaded', () => {
             listenStaff();
-            listenGameResults();
 
             setTimeout(() => {
                 if (!localStorage.getItem('gamesLoginModalSeen')) {
@@ -942,6 +764,10 @@
                 }
             }, 650);
         });
+
+        function getCurrentStaff() {
+            return staffData[activeStaffIdx] || staffData[0];
+        }
 
         function listenStaff() {
             onSnapshot(collection(db, 'staff'), snap => {
@@ -960,124 +786,7 @@
                 renderStaffSelectors();
                 renderAvatarOptions();
                 renderCurrentUser();
-                renderLeaderboard();
-                renderCurrentPlayerStats();
             });
-        }
-
-        function listenGameResults() {
-            onSnapshot(collection(db, 'gameResults_live'), snap => {
-                gameResults = {};
-
-                snap.docs.forEach(d => {
-                    gameResults[d.id] = normalizeGameResults(d.data());
-                });
-
-                renderLeaderboard();
-                renderCurrentPlayerStats();
-            });
-        }
-
-        function mergeGameResults(data) {
-            return {
-                wordle: {
-                    ...DEFAULT_GAME_RESULTS.wordle,
-                    ...(data.wordle || {})
-                },
-                crossword: {
-                    ...DEFAULT_GAME_RESULTS.crossword,
-                    ...(data.crossword || {})
-                },
-                wordSearch: {
-                    ...DEFAULT_GAME_RESULTS.wordSearch,
-                    ...(data.wordSearch || {})
-                }
-            };
-        }
-
-        function getCurrentStaff() {
-            return staffData[activeStaffIdx] || staffData[0];
-        }
-
-        function getResultsForStaff(staffId) {
-            return normalizeGameResults(gameResults[staffId] || {});
-        }
-
-        function calculatePlayerScore(results) {
-            return safeNumber(results.wordle.totalScore)
-                + safeNumber(results.crossword.totalScore)
-                + safeNumber(results.wordSearch.totalScore);
-        }
-
-        function renderLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            if (!list) return;
-
-            const currentStaff = getCurrentStaff();
-
-            const ranked = staffData.map(staff => {
-                const results = getResultsForStaff(staff.id);
-
-                return {
-                    staff,
-                    results,
-                    total: calculatePlayerScore(results)
-                };
-            }).sort((a, b) => b.total - a.total);
-
-            list.innerHTML = ranked.map((entry, index) => {
-                const isCurrentUser = entry.staff.id === currentStaff.id;
-                const rankClass = index === 0 ? 'rank gold' : 'rank';
-
-                return `
-                    <div class="leader-row ${isCurrentUser ? 'current-user' : ''}">
-                        <div class="${rankClass}">${index + 1}</div>
-
-                        <div class="leader-main">
-                            <img src="${entry.staff.avatar}" alt="">
-                            <div>
-                                <div class="leader-name">${entry.staff.name}</div>
-                                <div class="leader-sub">
-                                    Wordle ${entry.results.wordle.wins}/${entry.results.wordle.gamesPlayed} · Crossword ${entry.results.crossword.completed} · Word Search ${entry.results.wordSearch.completed}
-                                    ${isCurrentUser ? ' · Current user' : ''}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="leader-score">
-                            ${entry.total}
-                            <span>Points</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderCurrentPlayerStats() {
-            const box = document.getElementById('current-player-stats');
-            if (!box) return;
-
-            const currentStaff = getCurrentStaff();
-            const results = getResultsForStaff(currentStaff.id);
-            const total = calculatePlayerScore(results);
-
-            box.innerHTML = `
-                <div class="stats-line"><span>Current player</span><strong>${currentStaff.name}</strong></div>
-                <div class="stats-line"><span>Total score</span><strong>${total}</strong></div>
-                <div class="stats-line"><span>Wordle games</span><strong>${results.wordle.gamesPlayed}</strong></div>
-                <div class="stats-line"><span>Wordle wins</span><strong>${results.wordle.wins}</strong></div>
-                <div class="stats-line"><span>Best Wordle score</span><strong>${results.wordle.bestScore || 0}</strong></div>
-                <div class="stats-line"><span>Best Wordle time</span><strong>${formatTime(results.wordle.bestTimeSeconds)}</strong></div>
-            `;
-        }
-
-        function formatTime(seconds) {
-            if (!seconds) return 'None';
-
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-
-            return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
         }
 
         function renderStaffSelectors() {
@@ -1094,8 +803,6 @@
 
             renderStaffSelectors();
             renderCurrentUser();
-            renderLeaderboard();
-            renderCurrentPlayerStats();
 
             toggleModal('login-modal', true);
         };
