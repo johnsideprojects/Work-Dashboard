@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-padding-top: 76px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Composer | AA Self Storage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-off-white: #F4F1E8;
+            --brand-gray: #555555;
+            --brand-yellow: #ffd701;
+            --brand-red: #e74c3c;
+            --brand-blue: #026af2;
+            --text-dark: #363636;
+            --text-muted: #666666;
+            --text-subtle: #888888;
+            --white: #ffffff;
+            --header-height: 76px;
+            --sidenav-width: 200px;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Barlow', sans-serif; background-color: var(--bg-off-white); color: var(--text-dark); line-height: 1.5; overflow: hidden; }
+        .sidenav { position: fixed; top: 0; left: 0; width: var(--sidenav-width); height: 100vh; background: var(--white); border-right: 1px solid rgba(0,0,0,0.08); box-shadow: 2px 0 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; z-index: 1100; }
+        .sidenav-logo { height: var(--header-height); display: flex; align-items: center; justify-content: center; padding: 0 16px; border-bottom: 4px solid var(--brand-yellow); flex-shrink: 0; }
+        .sidenav-logo img { max-height: 46px; max-width: 100%; width: auto; display: block; }
+        .sidenav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+        .sidenav-section-label { font-size: 0.65rem; font-weight: 700; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px; margin-bottom: 6px; margin-top: 4px; }
+        .sidenav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 6px; text-decoration: none; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; transition: background 0.15s, color 0.15s; }
+        .sidenav-link:hover { background: #f5f5f5; color: var(--text-dark); }
+        .sidenav-link.active { background: #fff8d6; color: var(--text-dark); }
+        .sidenav-link > svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.65; }
+        .sidenav-link.active svg { opacity: 1; }
+        header { height: var(--header-height); background: var(--white); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; position: sticky; top: 0; z-index: 1000; border-bottom: 4px solid var(--brand-yellow); box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .staff-selector { display: flex; gap: 5px; background: #eee; padding: 4px; border-radius: 6px; }
+        .staff-chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--brand-gray); }
+        .staff-chip.active { background: var(--brand-yellow); color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .avatar-small { width: 20px; height: 20px; border-radius: 50%; background: #ddd; object-fit: cover; }
+        .settings-trigger { cursor: pointer; display: flex; align-items: center; color: var(--brand-gray); transition: color 0.2s; }
+        .settings-trigger:hover { color: var(--text-dark); }
+        .page-body { margin-left: var(--sidenav-width); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 480px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-weight: 700; font-size: 1rem; margin-bottom: 20px; border-bottom: 2px solid var(--brand-yellow); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-input, .modal-textarea, .modal-select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; }
+        .modal-textarea { height: 150px; resize: none; }
+        .section-label-modal { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; display: block; }
+        .action-btn-small { background: var(--brand-yellow); border: none; padding: 12px 16px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border-radius: 4px; }
+        .shortcode-hint { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.6; }
+        .desk-grid { display: grid; grid-template-columns: 280px 1fr 360px; flex: 1; overflow: hidden; }
+        .template-sidebar { background: #fdfdfd; border-right: 1px solid #ddd; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
+        .section-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 18px 0 8px 0; letter-spacing: 0.5px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .section-label:first-child { margin-top: 0; }
+        .template-btn { width: 100%; padding: 11px 14px; margin-bottom: 5px; background: white; border: 1px solid #eee; border-radius: 8px; text-align: left; font-family: 'Barlow'; font-weight: 700; font-size: 0.82rem; color: var(--brand-gray); cursor: pointer; transition: 0.15s; }
+        .template-btn:hover { border-color: var(--brand-yellow); transform: translateX(4px); }
+        .template-btn.active { background: var(--brand-yellow); color: var(--text-dark); border-color: var(--brand-yellow); box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+        .manage-templates-link { margin-top: auto; padding: 14px; text-align: center; font-size: 0.78rem; font-weight: 700; color: var(--brand-blue); cursor: pointer; border-top: 1px solid #eee; }
+        .manage-templates-link:hover { text-decoration: underline; }
+        .canvas { background: #e9e6dd; padding: 32px; display: flex; justify-content: center; overflow-y: auto; }
+        .paper { background: white; width: 100%; max-width: 860px; min-height: 960px; padding: 72px 80px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); position: relative; }
+        .paper::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--brand-yellow); }
+        #email-editor { outline: none; font-size: 1.05rem; line-height: 1.75; color: #333; min-height: 500px; white-space: pre-wrap; }
+        #email-editor img { max-width: 100%; height: auto; display: block; margin: 15px 0; border-radius: 4px; }
+        .modifier-sidebar { background: white; border-left: 1px solid #ddd; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
+        .field-group { margin-bottom: 18px; }
+        .modifier-sidebar label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .currency-symbol { position: absolute; left: 12px; font-weight: 700; color: var(--text-dark); }
+        .price-input { padding-left: 25px !important; }
+        .modifier-sidebar input[type="text"], .modifier-sidebar input[type="email"] { width: 100%; padding: 11px 12px; border: 2px solid #eee; background: #fafafa; border-radius: 6px; font-family: 'Barlow'; font-size: 0.95rem; outline: none; transition: border-color 0.15s, background 0.15s; }
+        .modifier-sidebar input[type="text"]:focus, .modifier-sidebar input[type="email"]:focus { border-color: var(--brand-yellow); background: white; }
+        .modifier-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 18px 0 10px 0; letter-spacing: 0.5px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase; }
+        .modifier-label:first-child { margin-top: 0; }
+        .action-stack { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 16px; }
+        .btn-main { padding: 14px 16px; border-radius: 6px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; font-family: 'Barlow'; transition: all 0.2s; text-align: center; text-decoration: none; display: block; width: 100%; }
+        .btn-copy { background: #eee; color: var(--text-dark); }
+        .btn-copy:hover { background: #e0e0e0; }
+        .btn-copy.success { background: #2ecc71; color: white; }
+        .btn-send { background: var(--brand-blue); color: white; }
+        .btn-send:hover { background: #0056cc; }
+        .edit-template-link { text-align: center; font-size: 0.75rem; color: var(--text-muted); cursor: pointer; font-weight: 700; display: none; padding: 4px 0; }
+        .edit-template-link:hover { color: var(--brand-blue); }
+        .avatar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 15px 0; max-height: 300px; overflow-y: auto; padding-right: 6px; scrollbar-width: thin; }
+        .avatar-opt { width: 100%; aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 3px solid transparent; }
+        .avatar-opt.selected { border-color: var(--brand-yellow); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #bbb; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+        <aside class="sidenav">
+        <div class="sidenav-logo"><img src="aa-self-storage-logo-3c.webp" alt="AA Self Storage"></div>
+        <nav class="sidenav-links">
+            <div class="sidenav-section-label">Navigation</div>
+            <a href="index.html" class="sidenav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="emails.html" class="sidenav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Email Composer
+            </a>
+            <a href="supplies.html" class="sidenav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Shopping List
+            </a>
+        </nav>
+    </aside>
+
+    <div class="modal-overlay" id="settings-modal" onclick="if(event.target === this) toggleModal('settings-modal', false)">
+        <div class="modal">
+            <div class="modal-header">Staff Settings</div>
+            <label class="section-label-modal">Select staff to edit</label>
+            <select id="edit-staff-target" class="modal-select" onchange="loadStaffDataForEdit()">
+                <option value="0">Staff A</option>
+                <option value="1">Staff B</option>
+                <option value="2">Maint</option>
+            </select>
+            <label class="section-label-modal">Display name</label>
+            <input type="text" id="edit-name" class="modal-input" placeholder="Enter name">
+            <label class="section-label-modal">Choose avatar</label>
+            <div class="avatar-grid" id="avatar-options"></div>
+            <button class="btn-main btn-send" style="width:100%; margin-top:8px;" onclick="saveStaffSettings()">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="template-modal" onclick="if(event.target === this) toggleModal('template-modal', false)">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="temp-modal-title">Edit Template</span>
+                <span id="delete-temp-btn" style="color:var(--brand-red); font-size:0.78rem; cursor:pointer; font-weight:700;" onclick="deleteTemplate()">Delete</span>
+            </div>
+            <input type="hidden" id="edit-temp-id">
+            <label class="section-label-modal">Category</label>
+            <select id="temp-category" class="modal-select">
+                <option value="Sales">Sales / Leads</option>
+                <option value="Operations">Operations</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <label class="section-label-modal">Menu title</label>
+            <input type="text" id="temp-title" class="modal-input" placeholder="e.g. Price Quote">
+            <label class="section-label-modal">Image URL (optional)</label>
+            <input type="text" id="temp-image" class="modal-input" placeholder="https://example.com/logo.png">
+            <label class="section-label-modal">Email subject line</label>
+            <input type="text" id="temp-subject" class="modal-input" placeholder="e.g. Your Storage Quote">
+            <label class="section-label-modal">Email body</label>
+            <div class="shortcode-hint">Shortcodes: [NAME] &nbsp;[UNIT] &nbsp;[PRICE] &nbsp;[STAFF] &nbsp;[IMAGE]</div>
+            <textarea id="temp-body" class="modal-textarea"></textarea>
+            <button class="btn-main btn-send" style="width:100%;" onclick="saveTemplate()">Save Template</button>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <header>
+            <div class="nav-right">
+                <div class="staff-selector" id="header-staff-selector"></div>
+                <div class="settings-trigger" onclick="toggleModal('settings-modal', true)" title="Staff Settings">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+            </div>
+        </header>
+
+        <main class="desk-grid">
+            <aside class="template-sidebar">
+                <div id="template-list-container" style="flex-grow:1;"></div>
+                <div class="manage-templates-link" onclick="openTemplateEditor()">+ Add New Template</div>
+            </aside>
+            <section class="canvas">
+                <div class="paper">
+                    <div id="email-editor" contenteditable="true">Select a template to begin...</div>
+                </div>
+            </section>
+            <aside class="modifier-sidebar">
+                <div class="modifier-label">Recipient Details</div>
+                <div class="field-group"><label>Customer name</label><input type="text" id="v-name" onkeyup="syncDraft()"></div>
+                <div class="field-group"><label>Email address</label><input type="email" id="v-email"></div>
+                <div class="modifier-label">Unit Details</div>
+                <div class="field-group"><label>Unit size</label><input type="text" id="v-unit" onkeyup="syncDraft()"></div>
+                <div class="field-group">
+                    <label>Monthly rate</label>
+                    <div class="input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="text" id="v-price" class="price-input" onkeyup="syncDraft()">
+                    </div>
+                </div>
+                <div class="action-stack">
+                    <button id="copy-btn" class="btn-main btn-copy" onclick="copyToClipboard()">Copy to Clipboard</button>
+                    <button class="btn-main btn-send" onclick="sendDirect()">Launch Email Client</button>
+                    <div id="edit-cur-link" class="edit-template-link" onclick="editCurrentTemplate()">Edit This Template</div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ── FIREBASE ────────────────────────────────────────────── -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, doc, collection, onSnapshot, setDoc, addDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ── PASTE YOUR FIREBASE CONFIG HERE ──────────────────────
+        const firebaseConfig = {
+            apiKey:            "AIzaSyC1w7shhAwtLS0PJSJ67fhNfA67JetO3s4",
+            authDomain:        "leland-dashboard.firebaseapp.com",
+            projectId:         "leland-dashboard",
+            storageBucket:     "leland-dashboard.firebasestorage.app",
+            messagingSenderId: "520920211884",
+            appId:             "1:520920211884:web:db378402829a898a0c9a09"
+        };
+        // ─────────────────────────────────────────────────────────
+
+        const app = initializeApp(firebaseConfig);
+        const db  = getFirestore(app);
+
+        const AVATARS = [
+            // ── Animal Avatars — all confirmed free on flaticon.com ──
+            "https://cdn-icons-png.flaticon.com/512/8034/8034504.png", // Penguin    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063118.png", // Bear       (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/141/141803.png",   // Fox        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/141/141742.png",   // Koala      (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959921.png", // Puppy      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959951.png", // Elephant   (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1959/1959984.png", // Red Panda  (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2618/2618447.png", // Bunny      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/1318/1318921.png", // Giraffe    (justicon)
+            "https://cdn-icons-png.flaticon.com/512/8372/8372114.png", // Panda      (free)
+            "https://cdn-icons-png.flaticon.com/512/2315/2315502.png", // Wolf       (free)
+            "https://cdn-icons-png.flaticon.com/512/1757/1757017.png", // Lion       (free)
+            "https://cdn-icons-png.flaticon.com/512/3195/3195978.png", // Monkey     (free)
+            "https://cdn-icons-png.flaticon.com/512/103/103323.png",   // Owl        (Freepik)
+            "https://cdn-icons-png.flaticon.com/512/4775/4775505.png", // Rabbit     (free)
+            "https://cdn-icons-png.flaticon.com/512/578/578423.png",   // Panda Bear (free)
+            "https://cdn-icons-png.flaticon.com/512/2173/2173478.png", // Cat        (free)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998713.png", // Lion 2     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998804.png", // Tiger      (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/7063/7063181.png", // Lion 3     (Flat Icons)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053574.png", // Dog        (justicon)
+            "https://cdn-icons-png.flaticon.com/512/2053/2053787.png", // Dog 2      (justicon)
+            "https://cdn-icons-png.flaticon.com/512/11957/11957797.png", // Tiger 2  (RIkas Dzihab)
+            "https://cdn-icons-png.flaticon.com/512/1998/1998592.png", // Cat 2      (Flat Icons)
+        ];
+
+        const DEFAULT_STAFF = [
+            { id: "staff0", name: "Staff A", avatar: AVATARS[0] },
+            { id: "staff1", name: "Staff B", avatar: AVATARS[1] },
+            { id: "staff2", name: "Maint",   avatar: AVATARS[2] }
+        ];
+
+        // ── NOTE: These defaults only seed on first run when Firestore ─
+        // ── 'templates' collection is empty. To reset, delete that   ─
+        // ── collection in the Firebase console, then reload the page. ─
+        const DEFAULT_TEMPLATES = [
+
+            // ── SALES ──────────────────────────────────────────────
+            { id: "tmpl1",  category: "Sales", title: "Rate Inquiry",
+              imageUrl: "", subject: "Storage Rates at AA Self Storage — Leland, NC",
+              body: "Hi [NAME],\n\nThank you for reaching out about storage at AA Self Storage! I\'m happy to share our current availability.\n\nWe have a [UNIT] unit available for $[PRICE]/month. This includes:\n\n  • 24/7 gate access\n  • On-site management\n  • Month-to-month lease\n  • No long-term commitment required\n\nIf you\'d like to reserve this unit or take a look in person, just reply to this email or give us a call — we\'d love to get you set up.\n\nBest regards,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl2",  category: "Sales", title: "Price Quote",
+              imageUrl: "", subject: "Your Storage Quote — AA Self Storage",
+              body: "Hi [NAME],\n\nGreat news — I\'ve put a hold on a [UNIT] unit for you at $[PRICE]/month.\n\nTo secure the unit, we just need a valid ID and first month\'s payment at move-in. There\'s no deposit required and no long-term contract.\n\nFeel free to reply here or stop by the office and we\'ll get you taken care of right away.\n\nBest,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl3",  category: "Sales", title: "Directions to Facility",
+              imageUrl: "", subject: "Directions to AA Self Storage — Leland, NC",
+              body: "Hi [NAME],\n\nWe\'re easy to find! Here are directions to AA Self Storage:\n\nAA Self Storage\n[YOUR STREET ADDRESS]\nLeland, NC 28451\n\nFrom Wilmington:\nTake US-17 N toward Leland. [Add your specific turn-by-turn directions here.]\n\nOur office hours are [YOUR HOURS]. Just pull up to the gate and our manager will get you squared away.\n\nSee you soon!\n\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl4",  category: "Sales", title: "Follow-Up / Still Interested?",
+              imageUrl: "", subject: "Still Looking for Storage? We Can Help",
+              body: "Hi [NAME],\n\nI wanted to follow up on your recent inquiry about storage at AA Self Storage. We still have a [UNIT] unit available at $[PRICE]/month and would love to hold it for you.\n\nIf your needs have changed or you\'d like to see other size options, just let me know — I\'m happy to help you find the right fit.\n\nBest regards,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            // ── OPERATIONS ─────────────────────────────────────────
+            { id: "tmpl5",  category: "Operations", title: "Welcome / Move-In Confirmation",
+              imageUrl: "", subject: "Welcome to AA Self Storage!",
+              body: "Hi [NAME],\n\nWelcome to AA Self Storage — we\'re glad to have you!\n\nHere\'s a quick summary of your rental:\n\n  • Unit: [UNIT]\n  • Monthly Rate: $[PRICE]\n  • Gate Hours: [YOUR HOURS]\n  • Gate Code: [CODE IF APPLICABLE]\n\nA few reminders:\n  • Your lock must be on the unit at all times\n  • Payment is due on the [DATE] of each month\n  • Autopay is available — just ask us to set it up\n\nDon\'t hesitate to reach out if you have any questions. We\'re here to help!\n\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl6",  category: "Operations", title: "Autopay Setup",
+              imageUrl: "", subject: "Set Up Autopay — Never Miss a Payment",
+              body: "Hi [NAME],\n\nJust a friendly reminder that autopay is available for your [UNIT] unit. It\'s the easiest way to make sure your $[PRICE] monthly payment is always on time — no late fees, no hassle.\n\nTo get set up, simply reply to this email or stop by the office and we\'ll take care of it in just a few minutes.\n\nBest,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl7",  category: "Operations", title: "Delinquency Notice",
+              imageUrl: "", subject: "Important: Payment Past Due on Your Unit",
+              body: "Hi [NAME],\n\nThis is a notice that your account for unit [UNIT] is currently past due. Your monthly rate of $[PRICE] has not been received for this billing period.\n\nTo avoid a late fee and gate lockout, please submit payment as soon as possible. You can pay in person at the office or contact us to arrange payment by phone.\n\nIf you believe this is an error or have already submitted payment, please disregard this notice and contact us so we can update your account.\n\nThank you,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl8",  category: "Operations", title: "Move-Out Confirmation",
+              imageUrl: "", subject: "Move-Out Confirmation — AA Self Storage",
+              body: "Hi [NAME],\n\nThis email confirms that we have processed your move-out from unit [UNIT]. We\'re sorry to see you go and hope your experience with us was a positive one!\n\nPlease remember to:\n  • Remove your lock from the unit\n  • Sweep out the unit before vacating\n  • Return any keys or access cards to the office\n\nOnce we inspect the unit, we\'ll close out your account. If you have any questions about your final billing, don\'t hesitate to reach out.\n\nWe wish you all the best — and hope to serve you again in the future!\n\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            // ── MAINTENANCE ────────────────────────────────────────
+            { id: "tmpl9",  category: "Maintenance", title: "Unit Access Needed",
+              imageUrl: "", subject: "Scheduled Maintenance — Unit Access Required",
+              body: "Hi [NAME],\n\nWe need to perform routine maintenance in your area of the facility and may need access to unit [UNIT]. This work is scheduled for [DATE/TIME].\n\nIn most cases your belongings will not be disturbed, but we wanted to give you advance notice. Please ensure your lock is accessible and that there are no items blocking the door from the outside.\n\nIf you have any concerns or questions, please don\'t hesitate to reach out.\n\nThank you for your cooperation,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl10", category: "Maintenance", title: "Clean Out Reminder",
+              imageUrl: "", subject: "Reminder: Unit Clean-Out Before Move-Out",
+              body: "Hi [NAME],\n\nAs your move-out date approaches, please remember that unit [UNIT] must be completely emptied and swept out before we can finalize your move-out.\n\nChecklist before handing off:\n  • All belongings removed\n  • Unit swept clean\n  • Lock removed from door\n\nIf the unit is not cleaned out by your move-out date, an additional fee may apply. Please contact us if you need to make other arrangements.\n\nThank you,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            // ── ADMIN ──────────────────────────────────────────────
+            { id: "tmpl11", category: "Admin", title: "Google Review Request",
+              imageUrl: "", subject: "How Was Your Experience at AA Self Storage?",
+              body: "Hi [NAME],\n\nThank you for choosing AA Self Storage — it\'s been a pleasure having you as a customer!\n\nIf you\'ve had a great experience, we\'d really appreciate it if you could take a moment to leave us a Google review. It only takes a minute and makes a huge difference for a small local business like ours.\n\n👉 [PASTE YOUR GOOGLE REVIEW LINK HERE]\n\nThank you so much — we truly appreciate your support!\n\nWarm regards,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl12", category: "Admin", title: "Insurance Update Required",
+              imageUrl: "", subject: "Action Required: Proof of Insurance Needed",
+              body: "Hi [NAME],\n\nOur records show that the proof of insurance on file for your unit [UNIT] has expired or is missing.\n\nPer the terms of your rental agreement, all tenants are required to maintain valid insurance coverage for stored items. Please provide updated proof of insurance at your earliest convenience.\n\nAlternatively, we offer an affordable protection plan for $[PRICE]/month that you can enroll in right through our office — no paperwork required.\n\nPlease respond to this email or stop by the office within the next 7 days to keep your account in good standing.\n\nThank you,\n[STAFF]\nAA Self Storage | Leland, NC" },
+
+            { id: "tmpl13", category: "Admin", title: "Lease Renewal Notice",
+              imageUrl: "", subject: "Your Storage Lease — Renewal Information",
+              body: "Hi [NAME],\n\nWe wanted to reach out regarding your rental of unit [UNIT] at AA Self Storage.\n\nYour current rate of $[PRICE]/month will remain in effect for the upcoming period. No action is required on your part — your month-to-month agreement will continue automatically.\n\nIf you have any questions about your account, changes in storage needs, or would like to discuss your options, we\'re always happy to help.\n\nThank you for being a valued customer!\n\n[STAFF]\nAA Self Storage | Leland, NC" }
+        ];
+
+        let staffData          = DEFAULT_STAFF;
+        let activeStaffIdx     = Number(localStorage.getItem('activeStaffIdx') || 0);
+        let selectedAvatarUrl  = staffData[0].avatar;
+        let templates          = [];
+        let selectedTemplateId = null;
+
+        // ── INIT ──────────────────────────────────────────────────
+        window.addEventListener('DOMContentLoaded', () => {
+            listenStaff();
+            listenTemplates();
+        });
+
+        // ── LISTENERS ─────────────────────────────────────────────
+        function listenStaff() {
+            onSnapshot(collection(db, 'staff'), snap => {
+                if (snap.empty) {
+                    const batch = writeBatch(db);
+                    DEFAULT_STAFF.forEach(s => batch.set(doc(db, 'staff', s.id), s));
+                    batch.commit();
+                    return;
+                }
+                staffData = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+                    .sort((a, b) => a.id.localeCompare(b.id));
+                if (activeStaffIdx > staffData.length - 1) activeStaffIdx = 0;
+                renderStaffSelectors();
+                renderAvatarOptions();
+                syncDraft();
+            });
+        }
+
+        function listenTemplates() {
+            onSnapshot(collection(db, 'templates'), snap => {
+                if (snap.empty) {
+                    const batch = writeBatch(db);
+                    DEFAULT_TEMPLATES.forEach(t => batch.set(doc(db, 'templates', t.id), t));
+                    batch.commit();
+                    return;
+                }
+                templates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderTemplates();
+            });
+        }
+
+        // ── STAFF ─────────────────────────────────────────────────
+        function renderStaffSelectors() {
+            document.getElementById('header-staff-selector').innerHTML = staffData.map((s, idx) => `
+                <button class="staff-chip ${idx === activeStaffIdx ? 'active' : ''}" onclick="setActiveStaff(${idx})">
+                    <img src="${s.avatar}" class="avatar-small"> ${s.name}
+                </button>`).join('');
+        }
+        window.setActiveStaff = idx => { activeStaffIdx = idx; localStorage.setItem('activeStaffIdx', String(idx)); renderStaffSelectors(); syncDraft(); };
+
+        function renderAvatarOptions() {
+            document.getElementById('avatar-options').innerHTML = AVATARS.map(url => `
+                <img src="${url}" class="avatar-opt ${url === selectedAvatarUrl ? 'selected' : ''}" onclick="selectAvatar('${url}')">`).join('');
+        }
+        window.selectAvatar = url => { selectedAvatarUrl = url; renderAvatarOptions(); };
+
+        window.saveStaffSettings = async () => {
+            const idx   = parseInt(document.getElementById('edit-staff-target').value);
+            const staff = staffData[idx];
+            await setDoc(doc(db, 'staff', staff.id), {
+                ...staff,
+                name:   document.getElementById('edit-name').value,
+                avatar: selectedAvatarUrl
+            });
+            toggleModal('settings-modal', false);
+        };
+
+        // ── TEMPLATES ─────────────────────────────────────────────
+        function renderTemplates() {
+            const container  = document.getElementById('template-list-container');
+            const categories = ["Sales", "Operations", "Maintenance", "Admin"];
+            container.innerHTML = categories.map(cat => {
+                const catT = templates.filter(t => t.category === cat);
+                if (!catT.length) return '';
+                return `<div class="section-label">${cat}</div>` +
+                    catT.map(t => `<button class="template-btn ${t.id === selectedTemplateId ? 'active' : ''}" onclick="selectTemplate('${t.id}')">${t.title}</button>`).join('');
+            }).join('');
+            document.getElementById('edit-cur-link').style.display = selectedTemplateId ? 'block' : 'none';
+        }
+
+        window.selectTemplate = id => { selectedTemplateId = id; renderTemplates(); syncDraft(); };
+
+        window.openTemplateEditor = (id = null) => {
+            if (id) {
+                const t = templates.find(x => x.id === id);
+                document.getElementById('temp-modal-title').innerText = "Edit Template";
+                document.getElementById('edit-temp-id').value  = t.id;
+                document.getElementById('temp-category').value = t.category || "Sales";
+                document.getElementById('temp-title').value    = t.title;
+                document.getElementById('temp-image').value    = t.imageUrl || "";
+                document.getElementById('temp-subject').value  = t.subject;
+                document.getElementById('temp-body').value     = t.body;
+                document.getElementById('delete-temp-btn').style.display = "block";
+            } else {
+                document.getElementById('temp-modal-title').innerText = "Add Template";
+                document.getElementById('edit-temp-id').value  = "";
+                document.getElementById('temp-category').value = "Sales";
+                document.getElementById('temp-title').value    = "";
+                document.getElementById('temp-image').value    = "";
+                document.getElementById('temp-subject').value  = "";
+                document.getElementById('temp-body').value     = "";
+                document.getElementById('delete-temp-btn').style.display = "none";
+            }
+            toggleModal('template-modal', true);
+        };
+
+        window.saveTemplate = async () => {
+            const id = document.getElementById('edit-temp-id').value;
+            const newT = {
+                category: document.getElementById('temp-category').value,
+                title:    document.getElementById('temp-title').value,
+                imageUrl: document.getElementById('temp-image').value,
+                subject:  document.getElementById('temp-subject').value,
+                body:     document.getElementById('temp-body').value
+            };
+            if (id) {
+                await setDoc(doc(db, 'templates', id), { id, ...newT });
+            } else {
+                const ref = await addDoc(collection(db, 'templates'), newT);
+                selectedTemplateId = ref.id;
+            }
+            toggleModal('template-modal', false);
+        };
+
+        window.deleteTemplate = async () => {
+            if (confirm("Delete this template permanently?")) {
+                const id = document.getElementById('edit-temp-id').value;
+                await deleteDoc(doc(db, 'templates', id));
+                selectedTemplateId = null;
+                document.getElementById('email-editor').innerHTML = "Select a template to begin...";
+                toggleModal('template-modal', false);
+            }
+        };
+
+        window.editCurrentTemplate = () => { if (selectedTemplateId) openTemplateEditor(selectedTemplateId); };
+
+        // ── DRAFT SYNC ────────────────────────────────────────────
+        window.syncDraft = () => {
+            if (!selectedTemplateId) return;
+            const t = templates.find(x => x.id === selectedTemplateId);
+            if (!t) return;
+            const name    = document.getElementById('v-name').value  || "[Customer Name]";
+            const unit    = document.getElementById('v-unit').value  || "[Unit Type]";
+            const price   = document.getElementById('v-price').value || "0.00";
+            const staff   = staffData[activeStaffIdx]?.name || "";
+            const imgHtml = t.imageUrl ? `<img src="${t.imageUrl}" alt="Email Graphic">` : "";
+            document.getElementById('email-editor').innerHTML = t.body
+                .replace(/\[IMAGE\]/g, imgHtml).replace(/\[NAME\]/g, name)
+                .replace(/\[UNIT\]/g, unit).replace(/\[PRICE\]/g, price)
+                .replace(/\[STAFF\]/g, staff);
+        };
+
+        // ── COPY / SEND ───────────────────────────────────────────
+        window.copyToClipboard = () => {
+            const editor = document.getElementById('email-editor');
+            const range  = document.createRange();
+            range.selectNode(editor);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                if (document.execCommand('copy')) {
+                    const btn = document.getElementById('copy-btn');
+                    btn.innerText = "Copied!"; btn.classList.add('success');
+                    setTimeout(() => { btn.innerText = "Copy to Clipboard"; btn.classList.remove('success'); }, 2000);
+                }
+            } catch(e) { console.error('Copy failed', e); }
+            window.getSelection().removeAllRanges();
+        };
+
+        window.sendDirect = () => {
+            const t = templates.find(x => x.id === selectedTemplateId);
+            if (!t) return;
+            window.open(`mailto:${document.getElementById('v-email').value}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(document.getElementById('email-editor').innerText)}`, '_blank');
+        };
+
+        // ── MODALS ────────────────────────────────────────────────
+        window.toggleModal = (id, show) => { document.getElementById(id).style.display = show ? 'flex' : 'none'; };
+
+        window.loadStaffDataForEdit = () => {
+            const s = staffData[document.getElementById('edit-staff-target').value];
+            document.getElementById('edit-name').value = s.name;
+            selectedAvatarUrl = s.avatar;
+            renderAvatarOptions();
+        };
+    </script>
+</body>
+</html>
