@@ -37,7 +37,23 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
         }
         .header-logo { height: 40px; display: block; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
         .header-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--brand-gray); }
+
+        .btn-dev-purge { 
+            background: #222; 
+            color: #ff5555; 
+            border: 1px solid #444; 
+            font-size: 0.68rem; 
+            font-weight: 800; 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.15s;
+        }
+        .btn-dev-purge:hover { background: #d32f2f; color: #fff; border-color: #d32f2f; }
 
         .content-wrapper { max-width: 1600px; margin: 20px auto; padding: 0 20px; }
         
@@ -46,7 +62,7 @@
             display: grid; 
             grid-template-columns: 1fr 1fr; 
             gap: 20px; 
-            align-items: start;
+            align-items: stretch;
         }
 
         @media (max-width: 1024px) {
@@ -82,7 +98,6 @@
         .btn-reset { color: #c0392b; background: #fdf0ef; border-color: #f5c6c2; }
         .btn-reset:hover { background: #fad9d6; }
 
-        /* Left Column Structure */
         .left-column, .right-column { display: flex; flex-direction: column; gap: 20px; }
 
         /* Tracker Section */
@@ -113,28 +128,52 @@
         .scoreboard-value { font-size: 2.2rem; font-weight: 800; line-height: 1; color: #1a1a00; margin-top: 2px; }
 
         .audit-label { font-size: 0.72rem; font-weight: 800; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-        #inquiry-feed { flex-grow: 1; overflow-y: auto; max-height: 180px; border-top: 1px solid #eee; padding-top: 6px; }
+        #inquiry-feed { flex-grow: 1; overflow-y: auto; max-height: 160px; border-top: 1px solid #eee; padding-top: 6px; }
         .feed-item { padding: 6px 0; border-bottom: 1px solid #f2f2f2; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
         .feed-tag { font-weight: 700; color: var(--text-dark); }
         .feed-sub { font-size: 0.68rem; color: var(--text-subtle); }
 
-        /* Compact Calendar Widget */
-        .calendar-widget { padding: 15px; }
-        #clock-display { font-size: 1.5rem; font-weight: 800; line-height: 1; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; margin-top: 8px; }
-        .cal-dow { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); padding: 2px 0; text-transform: uppercase; }
-        .cal-date { font-size: 0.7rem; padding: 4px 0; border-radius: 4px; color: var(--text-subtle); font-weight: 500; }
-        .cal-date.today { background: var(--brand-yellow); color: #1a1a00; font-weight: 800; }
-        .cal-date.empty { background: transparent; }
-        .cal-date.recycling-day { position: relative; background: #d4edda; font-weight: 800; color: #155724; }
-        .cal-date.recycling-day::after { content: '♻'; position: absolute; top: -3px; right: 0px; font-size: 0.55rem; }
+        /* Integrated Interactive Calendar Widget */
+        .calendar-widget { padding: 18px; }
+        #clock-display { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
+        .cal-dow { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); padding: 2px 0; text-transform: uppercase; }
+        
+        .cal-date { 
+            position: relative;
+            font-size: 0.75rem; 
+            padding: 8px 0; 
+            border-radius: 6px; 
+            color: var(--text-dark); 
+            font-weight: 700; 
+            cursor: pointer;
+            background: #f8f8f8;
+            border: 1px solid #eee;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .cal-date:hover:not(.empty) { background: #eef4ff; border-color: var(--brand-blue); }
+        .cal-date.today { border: 2px solid var(--brand-blue); }
+        .cal-date.selected { background: var(--brand-yellow) !important; color: #1a1a00 !important; border-color: #d1b100 !important; font-weight: 800; }
+        .cal-date.empty { background: transparent; border: none; cursor: default; }
+        
+        .cal-date.recycling-day::before { content: '♻'; position: absolute; top: 1px; left: 3px; font-size: 0.55rem; color: #155724; }
+        .cal-badge { 
+            position: absolute; 
+            bottom: 2px; 
+            right: 3px; 
+            background: var(--brand-blue); 
+            color: white; 
+            font-size: 0.55rem; 
+            font-weight: 800; 
+            padding: 0 4px; 
+            border-radius: 8px; 
+            line-height: 1.2;
+        }
+        .cal-date.selected .cal-badge { background: #363636; }
 
         /* Right Column Chart */
-        .timeframe-selector { display: flex; gap: 4px; background: #eee; padding: 3px; border-radius: 6px; }
-        .tf-btn { border: none; background: transparent; padding: 4px 10px; font-family: inherit; font-size: 0.72rem; font-weight: 800; color: var(--brand-gray); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
-        .tf-btn.active { background: var(--white); color: var(--text-dark); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-
-        .chart-container { position: relative; height: 500px; width: 100%; display: flex; align-items: center; justify-content: center; }
+        .chart-container { position: relative; flex-grow: 1; width: 100%; display: flex; align-items: center; justify-content: center; min-height: 420px; }
 
         /* Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
@@ -153,14 +192,17 @@
 <body>
 
     <header>
-        <div class="header-title">Facility Inquiries Dashboard</div>
+        <div class="header-left">
+            <div class="header-title">Facility Inquiries Dashboard</div>
+            <button class="btn-dev-purge" onclick="confirmDevPurge()" title="Developer tool to purge all Firebase records">⚙ Clear All Data</button>
+        </div>
         <img src="aa-self-storage-logo-3c.webp" alt="AA Self Storage" class="header-logo" onerror="this.style.display='none'">
     </header>
 
     <main class="content-wrapper">
         <div class="dashboard-grid">
             
-            <!-- LEFT COLUMN: Inquiry Tracker + Compact Calendar -->
+            <!-- LEFT COLUMN: Inquiry Tracker + Integrated Calendar -->
             <div class="left-column">
                 <div class="widget">
                     <div class="widget-header">
@@ -200,40 +242,37 @@
                     </div>
 
                     <div class="scoreboard">
-                        <div class="scoreboard-label">Total Inquiries Today</div>
+                        <div class="scoreboard-label" id="scoreboard-date-label">Total Inquiries (Today)</div>
                         <div class="scoreboard-value" id="total-today">0</div>
                     </div>
 
-                    <div class="audit-label">Live Activity Feed</div>
+                    <div class="audit-label" id="feed-title-label">Live Activity Feed</div>
                     <div id="inquiry-feed"></div>
                 </div>
 
-                <!-- Compact Calendar Widget Under Inquiry Controls -->
+                <!-- Integrated Calendar Filter Widget -->
                 <div class="widget calendar-widget">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
                             <div id="clock-display">00:00:00</div>
                             <div id="date-display" style="font-weight:700; color:var(--brand-gray); font-size:0.75rem;">Loading...</div>
                         </div>
-                        <div style="font-size:0.68rem; font-weight:700; color:#155724; background:#d4edda; padding:3px 6px; border-radius:4px;">
-                            ♻️ Recycling = Alternate Thursdays
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <button id="btn-show-today" class="btn-header-action btn-undo" onclick="selectToday()" style="display:none; background:var(--brand-yellow); border-color:#d1b100;">Show Today</button>
+                            <div style="font-size:0.68rem; font-weight:700; color:#155724; background:#d4edda; padding:3px 6px; border-radius:4px;">
+                                ♻️ Alternate Thursdays
+                            </div>
                         </div>
                     </div>
                     <div class="calendar-grid" id="calendar-grid"></div>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: Chart Analytics -->
+            <!-- RIGHT COLUMN: Interactive Chart Analytics -->
             <div class="right-column">
                 <div class="widget" style="height: 100%;">
                     <div class="widget-header">
-                        <span>Inquiry Breakdown</span>
-                        <div class="timeframe-selector">
-                            <button class="tf-btn active" onclick="setTimeframe('daily')">Daily</button>
-                            <button class="tf-btn" onclick="setTimeframe('weekly')">Weekly</button>
-                            <button class="tf-btn" onclick="setTimeframe('monthly')">Monthly</button>
-                            <button class="tf-btn" onclick="setTimeframe('yearly')">Yearly</button>
-                        </div>
+                        <span id="chart-header-label">Daily Inquiry Breakdown</span>
                     </div>
                     <div class="chart-container">
                         <canvas id="inquiryChart"></canvas>
@@ -244,7 +283,7 @@
         </div>
     </main>
 
-    <!-- STEP 2 MODAL: Select Inquiry Unit Type -->
+    <!-- MODAL: Select Inquiry Unit Type -->
     <div class="modal-overlay" id="type-modal">
         <div class="modal">
             <div class="modal-title">Select Unit / Inquiry Type</div>
@@ -262,7 +301,7 @@
     <!-- FIREBASE INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey:            "AIzaSyC1w7shhAwtLS0PJSJ67fhNfA67JetO3s4",
@@ -279,13 +318,13 @@
         // --- STATE VARIABLES ---
         let activeChannel = null;
         let allInquiries  = [];
-        let currentTimeframe = 'daily';
+        let selectedDate = new Date(); // Defaults to today
         let chartInstance = null;
 
         // --- INIT ---
         window.addEventListener('DOMContentLoaded', () => {
+            selectedDate.setHours(0,0,0,0);
             initChart();
-            renderCalendar();
             updateClock();
             setInterval(updateClock, 1000);
             listenToInquiries();
@@ -318,10 +357,10 @@
             }
         };
 
-        // --- UNDO & RESET ACTIONS ---
+        // --- UNDO, RESET & PURGE ACTIONS ---
         window.undoLastInquiry = async () => {
             if (allInquiries.length === 0) return;
-            const lastInquiry = allInquiries[0]; // Ordered by timestamp desc
+            const lastInquiry = allInquiries[0]; 
             try {
                 await deleteDoc(doc(db, 'inquiries', lastInquiry.id));
             } catch (e) {
@@ -345,6 +384,20 @@
             }
         };
 
+        // DEVELOPER PURGE FUNCTION
+        window.confirmDevPurge = async () => {
+            if (confirm("⚠️ DEVELOPER ACTION: Delete ALL recorded inquiries across all dates from Firebase? This action cannot be undone.")) {
+                try {
+                    const snapshot = await getDocs(collection(db, 'inquiries'));
+                    const batch = writeBatch(db);
+                    snapshot.docs.forEach(d => batch.delete(doc(db, 'inquiries', d.id)));
+                    await batch.commit();
+                } catch (e) {
+                    console.error("Error purging all records: ", e);
+                }
+            }
+        };
+
         // --- REALTIME FIRESTORE LISTENER ---
         function listenToInquiries() {
             const q = query(collection(db, 'inquiries'), orderBy('timestamp', 'desc'));
@@ -352,10 +405,11 @@
                 allInquiries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 updateCountsAndFeed();
                 updateChart();
+                renderCalendar();
             });
         }
 
-        // --- UI UPDATES ---
+        // --- UI & FEED UPDATES ---
         function updateCountsAndFeed() {
             const todayStart = new Date().setHours(0,0,0,0);
             const todayInquiries = allInquiries.filter(i => i.timestamp >= todayStart);
@@ -368,15 +422,29 @@
             document.getElementById('count-Phone').textContent = counts['Phone'];
             document.getElementById('count-Walk-In').textContent = counts['Walk-In'];
             document.getElementById('count-Email').textContent = counts['Email'];
-            document.getElementById('total-today').textContent = todayInquiries.length;
+
+            // Filter Feed & Scoreboard based on Selected Date
+            const selectedStart = new Date(selectedDate).setHours(0,0,0,0);
+            const selectedEnd = new Date(selectedDate).setHours(23,59,59,999);
+            const filteredInquiries = allInquiries.filter(i => i.timestamp >= selectedStart && i.timestamp <= selectedEnd);
+
+            const isToday = selectedStart === todayStart;
+            const dateStrFormatted = selectedDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+            document.getElementById('scoreboard-date-label').textContent = isToday ? 'Total Inquiries (Today)' : `Total Inquiries (${dateStrFormatted})`;
+            document.getElementById('total-today').textContent = filteredInquiries.length;
+            document.getElementById('feed-title-label').textContent = isToday ? 'Live Activity Feed' : `Activity Feed (${dateStrFormatted})`;
+            document.getElementById('chart-header-label').textContent = isToday ? 'Inquiry Breakdown (Today)' : `Inquiry Breakdown (${dateStrFormatted})`;
+
+            document.getElementById('btn-show-today').style.display = isToday ? 'none' : 'block';
 
             const feedEl = document.getElementById('inquiry-feed');
-            if (allInquiries.length === 0) {
-                feedEl.innerHTML = '<div style="font-size:0.75rem; color:#999; text-align:center; padding:10px;">No inquiries recorded yet.</div>';
+            if (filteredInquiries.length === 0) {
+                feedEl.innerHTML = `<div style="font-size:0.75rem; color:#999; text-align:center; padding:10px;">No inquiries recorded for ${isToday ? 'today' : dateStrFormatted}.</div>`;
                 return;
             }
 
-            feedEl.innerHTML = allInquiries.slice(0, 15).map(i => {
+            feedEl.innerHTML = filteredInquiries.map(i => {
                 const time = new Date(i.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 return `
                     <div class="feed-item">
@@ -390,15 +458,6 @@
         }
 
         // --- CHART & ANALYTICS (2D DONUT CHART) ---
-        window.setTimeframe = (tf) => {
-            currentTimeframe = tf;
-            document.querySelectorAll('.tf-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.toLowerCase() === tf);
-            });
-            updateChart();
-        };
-
-        // Custom Plugin for Center Text (Total Count Display)
         const centerTextPlugin = {
             id: 'centerText',
             beforeDraw(chart) {
@@ -472,23 +531,8 @@
             if (!chartInstance) return;
 
             const unitTypes = ['Climate-Controlled', 'Outside Parking', 'Exterior Unit', 'Covered Parking'];
-            const now = new Date();
-            let startTime = 0;
-            let endTime = now.getTime();
-
-            if (currentTimeframe === 'daily') {
-                const d = new Date(now);
-                startTime = d.setHours(0,0,0,0);
-                endTime = d.setHours(23,59,59,999);
-            } else if (currentTimeframe === 'weekly') {
-                const d = new Date(now);
-                d.setDate(d.getDate() - 6);
-                startTime = d.setHours(0,0,0,0);
-            } else if (currentTimeframe === 'monthly') {
-                startTime = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-            } else if (currentTimeframe === 'yearly') {
-                startTime = new Date(now.getFullYear(), 0, 1).getTime();
-            }
+            const startTime = new Date(selectedDate).setHours(0,0,0,0);
+            const endTime = new Date(selectedDate).setHours(23,59,59,999);
 
             const filteredInquiries = allInquiries.filter(i => i.timestamp >= startTime && i.timestamp <= endTime);
 
@@ -500,7 +544,16 @@
             chartInstance.update();
         }
 
-        // --- CALENDAR & CLOCK ---
+        // --- CALENDAR & DATE FILTERING ---
+        window.selectToday = () => {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            selectedDate = today;
+            updateCountsAndFeed();
+            updateChart();
+            renderCalendar();
+        };
+
         function renderCalendar() {
             const now = new Date();
             const year = now.getFullYear(), month = now.getMonth();
@@ -519,18 +572,40 @@
             let thursdayCounter = 0;
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateObj = new Date(year, month, d);
-                const isToday = d === now.getDate();
-                let isRecycling = false;
+                dateObj.setHours(0,0,0,0);
 
+                const isToday = d === now.getDate() && month === now.getMonth() && year === now.getFullYear();
+                const isSelected = dateObj.getTime() === selectedDate.getTime();
+
+                let isRecycling = false;
                 if (dateObj.getDay() === 4) {
                     thursdayCounter++;
                     if (thursdayCounter % 2 === 1) isRecycling = true;
                 }
 
+                // Count total inquiries on this specific calendar date
+                const dayStart = dateObj.getTime();
+                const dayEnd = new Date(year, month, d, 23, 59, 59, 999).getTime();
+                const dayInquiryCount = allInquiries.filter(i => i.timestamp >= dayStart && i.timestamp <= dayEnd).length;
+
                 const el = document.createElement('div');
-                el.className = 'cal-date' + (isToday ? ' today' : '') + (isRecycling ? ' recycling-day' : '');
+                el.className = 'cal-date' + (isToday ? ' today' : '') + (isSelected ? ' selected' : '') + (isRecycling ? ' recycling-day' : '');
                 el.textContent = d;
-                if (isRecycling) el.title = 'Recycling Pickup Day';
+
+                if (dayInquiryCount > 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'cal-badge';
+                    badge.textContent = dayInquiryCount;
+                    el.appendChild(badge);
+                }
+
+                el.onclick = () => {
+                    selectedDate = dateObj;
+                    updateCountsAndFeed();
+                    updateChart();
+                    renderCalendar();
+                };
+
                 grid.appendChild(el);
             }
         }
