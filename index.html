@@ -204,35 +204,96 @@
             padding: 10px 0;
         }
 
-        /* Note Pad & Quick Reference Section */
-        .notes-area {
-            width: 100%;
+        /* --- TO-DO LIST STYLES --- */
+        .todo-input-group {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        .todo-input {
             flex: 1;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 8px 10px;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             font-family: inherit;
-            font-size: 0.78rem;
-            color: #333;
-            resize: none;
-            background: #fffdf5;
+            font-size: 0.75rem;
             outline: none;
-            transition: border-color 0.15s;
         }
-        .notes-area:focus { border-color: var(--brand-yellow); }
-        
-        .ref-pills { display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; }
-        .ref-pill { 
-            font-size: 0.62rem; 
-            font-weight: 800; 
-            background: #f0f0f0; 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            border: 1px solid #ddd;
-            transition: all 0.15s;
+        .todo-input:focus { border-color: var(--brand-blue); }
+        .todo-add-btn {
+            background: var(--brand-yellow);
+            color: #1a1a00;
+            border: 1px solid #d1b100;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.15s;
         }
-        .ref-pill:hover { background: var(--brand-yellow); border-color: #d1b100; }
+        .todo-add-btn:hover { background: #ebd000; }
+
+        .todo-list {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 4px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 0;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid #e2e2e2;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            transition: all 0.15s ease;
+        }
+        .todo-item:hover { border-color: #bbb; }
+        .todo-item.completed {
+            background: #f4f4f4;
+            opacity: 0.65;
+        }
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--text-subtle);
+        }
+        .todo-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+        .todo-checkbox {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            accent-color: var(--brand-blue);
+        }
+        .todo-text {
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .todo-del-btn {
+            background: transparent;
+            border: none;
+            color: #999;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+            border-radius: 3px;
+        }
+        .todo-del-btn:hover { color: var(--brand-red); background: #fdf0ef; }
 
         footer {
             height: var(--footer-height);
@@ -359,21 +420,19 @@
                     </div>
                 </div>
 
-                <!-- Bottom Right: Quick Reference & Front Desk Notepad -->
+                <!-- Bottom Right: Shift To-Do List Widget -->
                 <div class="widget">
                     <div class="widget-header">
-                        <span>Desk Notes & Quick Reference</span>
-                        <span id="save-status" style="font-size:0.6rem; color:var(--text-subtle); text-transform:none; font-weight:500;">Saved</span>
+                        <span>Shift Checklist & Tasks</span>
+                        <button class="btn-header-action btn-undo" onclick="clearCompletedTasks()" style="font-size:0.62rem; padding:2px 6px;">Clear Completed</button>
                     </div>
                     
-                    <div class="ref-pills">
-                        <span class="ref-pill" onclick="appendSnippet('• Gate Hours: 6AM - 10PM\n• Office Hours: 9AM - 5PM\n')">🕒 Gate Hours</span>
-                        <span class="ref-pill" onclick="appendSnippet('• Promo: $1 First Month Special\n')">🏷️ Promo Info</span>
-                        <span class="ref-pill" onclick="appendSnippet('• Truck Rental: Free with 10x10+ unit move-in\n')">🚚 Truck Terms</span>
-                        <span class="ref-pill" onclick="appendSnippet('• Call-Back Needed: ')">📞 Call-Back Template</span>
-                    </div>
+                    <form class="todo-input-group" onsubmit="addTask(event)">
+                        <input type="text" id="todo-input-field" class="todo-input" placeholder="Add task (e.g., Call back Unit 104 lead)..." required />
+                        <button type="submit" class="todo-add-btn">+ Add</button>
+                    </form>
 
-                    <textarea id="staff-notepad" class="notes-area" placeholder="Type shift notes, active phone call messages, or quick reminders here..." oninput="autoSaveNotes()"></textarea>
+                    <div class="todo-list" id="todo-list"></div>
                 </div>
             </div>
 
@@ -402,7 +461,7 @@
     <!-- FIREBASE JS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey:            "AIzaSyC1w7shhAwtLS0PJSJ67fhNfA67JetO3s4",
@@ -420,7 +479,7 @@
         let allInquiries  = [];
         let selectedDate = new Date();
         let chartInstance = null;
-        let saveTimeout = null;
+        let allTasks = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             selectedDate.setHours(0,0,0,0);
@@ -428,37 +487,89 @@
             updateClock();
             setInterval(updateClock, 1000);
             listenToInquiries();
-            listenToNotepad();
+            listenToTasks();
         });
 
-        // NOTEPAD FUNCTIONS
-        function listenToNotepad() {
-            onSnapshot(doc(db, 'settings', 'staff_notes'), (docSnap) => {
-                if (docSnap.exists() && document.activeElement !== document.getElementById('staff-notepad')) {
-                    document.getElementById('staff-notepad').value = docSnap.data().content || '';
-                }
+        // TO-DO LIST FIREBASE FUNCTIONS
+        function listenToTasks() {
+            const q = query(collection(db, 'tasks'), orderBy('createdAt', 'asc'));
+            onSnapshot(q, (snapshot) => {
+                allTasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderTasks();
             });
         }
 
-        window.autoSaveNotes = () => {
-            document.getElementById('save-status').textContent = 'Saving...';
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                const text = document.getElementById('staff-notepad').value;
-                try {
-                    await setDoc(doc(db, 'settings', 'staff_notes'), { content: text, updatedAt: Date.now() });
-                    document.getElementById('save-status').textContent = 'Saved';
-                } catch(e) {
-                    document.getElementById('save-status').textContent = 'Save Error';
-                }
-            }, 800);
+        window.addTask = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('todo-input-field');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                await addDoc(collection(db, 'tasks'), {
+                    text: text,
+                    completed: false,
+                    createdAt: Date.now()
+                });
+                input.value = '';
+            } catch (err) {
+                console.error("Error adding task:", err);
+            }
         };
 
-        window.appendSnippet = (snippet) => {
-            const notepad = document.getElementById('staff-notepad');
-            notepad.value += snippet;
-            autoSaveNotes();
+        window.toggleTask = async (id, currentStatus) => {
+            try {
+                await updateDoc(doc(db, 'tasks', id), {
+                    completed: !currentStatus
+                });
+            } catch (err) {
+                console.error("Error toggling task:", err);
+            }
         };
+
+        window.deleteTask = async (id) => {
+            try {
+                await deleteDoc(doc(db, 'tasks', id));
+            } catch (err) {
+                console.error("Error deleting task:", err);
+            }
+        };
+
+        window.clearCompletedTasks = async () => {
+            const completed = allTasks.filter(t => t.completed);
+            if (completed.length === 0) return;
+            try {
+                const batch = writeBatch(db);
+                completed.forEach(t => batch.delete(doc(db, 'tasks', t.id)));
+                await batch.commit();
+            } catch (err) {
+                console.error("Error clearing completed tasks:", err);
+            }
+        };
+
+        function renderTasks() {
+            const container = document.getElementById('todo-list');
+            if (allTasks.length === 0) {
+                container.innerHTML = `<div style="font-size:0.72rem; color:#999; text-align:center; padding:12px;">No shift tasks added yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = allTasks.map(task => `
+                <div class="todo-item ${task.completed ? 'completed' : ''}">
+                    <div class="todo-left">
+                        <input type="checkbox" class="todo-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}', ${task.completed})">
+                        <span class="todo-text">${escapeHtml(task.text)}</span>
+                    </div>
+                    <button class="todo-del-btn" onclick="deleteTask('${task.id}')" title="Delete Task">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
 
         // INQUIRY ACTIONS
         window.openTypeModal = (channel) => {
