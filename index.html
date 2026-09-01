@@ -837,10 +837,27 @@
             }
         }
 
+        let currentDateStr = new Date().toDateString();
+
         function updateClock() {
             const now = new Date();
             document.getElementById('clock-display').textContent = now.toLocaleTimeString([], { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
             document.getElementById('date-display').textContent  = now.toLocaleDateString([],  { weekday: 'long', month: 'short', day: 'numeric' });
+        
+            // Check if midnight has passed
+            const todayStr = now.toDateString();
+            if (todayStr !== currentDateStr) {
+                currentDateStr = todayStr;
+                
+                // Auto-advance selected date to the new day
+                selectedDate = new Date();
+                selectedDate.setHours(0,0,0,0);
+                
+                // Refresh UI views seamlessly
+                updateCountsAndFeed();
+                updateChart();
+                renderCalendar();
+            }
         }
     </script>
 </body>
