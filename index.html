@@ -52,7 +52,7 @@
 
         .content-wrapper { 
             flex: 1; 
-            max-width: 1600px; 
+            max-width: 1800px; 
             width: 100%;
             margin: 0 auto; 
             padding: 12px 16px; 
@@ -61,7 +61,7 @@
         
         .dashboard-grid { 
             display: grid; 
-            grid-template-columns: 1fr 1fr; 
+            grid-template-columns: 1.1fr 1fr 0.9fr; 
             gap: 12px; 
             height: 100%;
             align-items: stretch;
@@ -92,18 +92,27 @@
             flex-shrink: 0; 
         }
 
+        .header-title-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-title-with-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--brand-gray);
+        }
+
         .btn-header-action { font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 3px 8px; cursor: pointer; border: 1px solid transparent; transition: background 0.15s; }
         .btn-undo { color: var(--text-dark); background: #eee; border-color: #ccc; }
         .btn-undo:hover { background: #e2e2e2; }
         .btn-reset { color: #c0392b; background: #fdf0ef; border-color: #f5c6c2; }
         .btn-reset:hover { background: #fad9d6; }
 
-        .left-column, .right-column { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; }
+        .dashboard-col { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; }
 
-        .left-column .widget:nth-child(1) { flex: 1.15; min-height: 0; }
-        .left-column .widget:nth-child(2) { flex: 0.85; min-height: 0; }
-        .right-column .widget:nth-child(1) { flex: 1.15; min-height: 0; }
-        .right-column .widget:nth-child(2) { flex: 0.85; min-height: 0; }
+        .dashboard-col .widget:nth-child(1) { flex: 1.15; min-height: 0; }
+        .dashboard-col .widget:nth-child(2) { flex: 0.85; min-height: 0; }
 
         .section-label { font-size: 0.65rem; font-weight: 800; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         .channel-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
@@ -204,14 +213,14 @@
             padding: 10px 0;
         }
 
-        /* --- TO-DO LIST STYLES --- */
-        .todo-input-group {
+        /* --- INPUT & LIST STYLES --- */
+        .item-input-group {
             display: flex;
             gap: 6px;
             margin-bottom: 8px;
             flex-shrink: 0;
         }
-        .todo-input {
+        .item-input {
             flex: 1;
             padding: 6px 10px;
             border: 1px solid #ccc;
@@ -220,8 +229,8 @@
             font-size: 0.75rem;
             outline: none;
         }
-        .todo-input:focus { border-color: var(--brand-blue); }
-        .todo-add-btn {
+        .item-input:focus { border-color: var(--brand-blue); }
+        .item-add-btn {
             background: var(--brand-yellow);
             color: #1a1a00;
             border: 1px solid #d1b100;
@@ -232,9 +241,9 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .todo-add-btn:hover { background: #ebd000; }
+        .item-add-btn:hover { background: #ebd000; }
 
-        .todo-list {
+        .custom-item-list {
             flex: 1;
             overflow-y: auto;
             border: 1px solid #eee;
@@ -246,7 +255,7 @@
             gap: 4px;
             min-height: 0;
         }
-        .todo-item {
+        .custom-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -257,32 +266,32 @@
             font-size: 0.75rem;
             transition: all 0.15s ease;
         }
-        .todo-item:hover { border-color: #bbb; }
-        .todo-item.completed {
+        .custom-item:hover { border-color: #bbb; }
+        .custom-item.completed {
             background: #f4f4f4;
             opacity: 0.65;
         }
-        .todo-item.completed .todo-text {
+        .custom-item.completed .item-text {
             text-decoration: line-through;
             color: var(--text-subtle);
         }
-        .todo-left {
+        .item-left {
             display: flex;
             align-items: center;
             gap: 8px;
             overflow: hidden;
         }
-        .todo-checkbox {
+        .item-checkbox {
             width: 15px;
             height: 15px;
             cursor: pointer;
             accent-color: var(--brand-blue);
         }
-        .todo-text {
-            font-weight: 500;
+        .item-text {
+            font-weight: 600;
             word-break: break-word;
         }
-        .todo-del-btn {
+        .item-del-btn {
             background: transparent;
             border: none;
             color: #999;
@@ -293,7 +302,19 @@
             line-height: 1;
             border-radius: 3px;
         }
-        .todo-del-btn:hover { color: var(--brand-red); background: #fdf0ef; }
+        .item-del-btn:hover { color: var(--brand-red); background: #fdf0ef; }
+
+        /* Inventory Tag Pill Design */
+        .inv-badge {
+            display: inline-block;
+            background: #eef4ff;
+            color: var(--brand-blue);
+            border: 1px solid #cce0ff;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
 
         footer {
             height: var(--footer-height);
@@ -342,8 +363,8 @@
     <main class="content-wrapper">
         <div class="dashboard-grid">
             
-            <!-- LEFT COLUMN -->
-            <div class="left-column">
+            <!-- COLUMN 1: INQUIRIES & CALENDAR -->
+            <div class="dashboard-col">
                 <div class="widget">
                     <div class="widget-header">
                         <span>Inquiry Tracker</span>
@@ -408,9 +429,9 @@
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN -->
-            <div class="right-column">
-                <!-- Top Right: Inquiry Breakdown Chart -->
+            <!-- COLUMN 2: CHART & TASKS -->
+            <div class="dashboard-col">
+                <!-- Inquiry Breakdown Chart -->
                 <div class="widget">
                     <div class="widget-header">
                         <span id="chart-header-label">Daily Inquiry Breakdown</span>
@@ -420,19 +441,58 @@
                     </div>
                 </div>
 
-                <!-- Bottom Right: Shift To-Do List Widget -->
+                <!-- Shift To-Do List Widget -->
                 <div class="widget">
                     <div class="widget-header">
                         <span>Shift Checklist & Tasks</span>
                         <button class="btn-header-action btn-undo" onclick="clearCompletedTasks()" style="font-size:0.62rem; padding:2px 6px;">Clear Completed</button>
                     </div>
                     
-                    <form class="todo-input-group" onsubmit="addTask(event)">
-                        <input type="text" id="todo-input-field" class="todo-input" placeholder="Add task (e.g., Call back Unit 104 lead)..." required />
-                        <button type="submit" class="todo-add-btn">+ Add</button>
+                    <form class="item-input-group" onsubmit="addTask(event)">
+                        <input type="text" id="todo-input-field" class="item-input" placeholder="Add task (e.g., Call back Unit 104 lead)..." required />
+                        <button type="submit" class="item-add-btn">+ Add</button>
                     </form>
 
-                    <div class="todo-list" id="todo-list"></div>
+                    <div class="custom-item-list" id="todo-list"></div>
+                </div>
+            </div>
+
+            <!-- COLUMN 3: AVAILABLE UNITS & SPACES -->
+            <div class="dashboard-col">
+                <!-- Top Half: Available Units -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="header-title-with-icon">
+                            <!-- Building/Unit SVG Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M17,11H15V7H17V11M13,11H11V7H13V11M9,11H7V7H9V11M17,17H15V13H17V17M13,17H11V13H13V17M9,17H7V13H9V17Z"/></svg>
+                            <span>Available Units</span>
+                        </div>
+                    </div>
+                    
+                    <form class="item-input-group" onsubmit="addInventoryItem(event, 'Unit')">
+                        <input type="text" id="unit-input-field" class="item-input" placeholder="e.g. 10x10 Climate (#204)" required />
+                        <button type="submit" class="item-add-btn">+ Add</button>
+                    </form>
+
+                    <div class="custom-item-list" id="units-list"></div>
+                </div>
+
+                <!-- Bottom Half: Available Spaces -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="header-title-with-icon">
+                            <!-- Vehicle/Parking SVG Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M18.92,6.01C18.72,5.42 18.16,5 17.5,5H6.5C5.84,5 5.28,5.42 5.08,6.01L3,12V20A1,1 0 0,0 4,21H5A1,1 0 0,0 6,20V19H18V20A1,1 0 0,0 19,21H20A1,1 0 0,0 21,20V12L18.92,6.01M6.85,7H17.14L18.22,10.08H5.78L6.85,7M19,17H5V12H19V17M7.5,13A1.5,1.5 0 0,0 6,14.5A1.5,1.5 0 0,0 7.5,16A1.5,1.5 0 0,0 9,14.5A1.5,1.5 0 0,0 7.5,13M16.5,13A1.5,1.5 0 0,0 15,14.5A1.5,1.5 0 0,0 16.5,16A1.5,1.5 0 0,0 18,14.5A1.5,1.5 0 0,0 16.5,13Z"/></svg>
+                            <span>Available Spaces</span>
+                        </div>
+                    </div>
+                    
+                    <form class="item-input-group" onsubmit="addInventoryItem(event, 'Space')">
+                        <input type="text" id="space-input-field" class="item-input" placeholder="e.g. 10x20 Covered Parking (#P-05)" required />
+                        <button type="submit" class="item-add-btn">+ Add</button>
+                    </form>
+
+                    <div class="custom-item-list" id="spaces-list"></div>
                 </div>
             </div>
 
@@ -477,9 +537,10 @@
 
         let activeChannel = null;
         let allInquiries  = [];
-        let selectedDate = new Date();
+        let selectedDate  = new Date();
         let chartInstance = null;
-        let allTasks = [];
+        let allTasks     = [];
+        let allInventory = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             selectedDate.setHours(0,0,0,0);
@@ -488,7 +549,82 @@
             setInterval(updateClock, 1000);
             listenToInquiries();
             listenToTasks();
+            listenToInventory();
         });
+
+        // INVENTORY (UNITS & SPACES) FIREBASE FUNCTIONS
+        function listenToInventory() {
+            const q = query(collection(db, 'inventory'), orderBy('createdAt', 'asc'));
+            onSnapshot(q, (snapshot) => {
+                allInventory = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderInventory();
+            });
+        }
+
+        window.addInventoryItem = async (e, type) => {
+            e.preventDefault();
+            const inputId = type === 'Unit' ? 'unit-input-field' : 'space-input-field';
+            const input = document.getElementById(inputId);
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                await addDoc(collection(db, 'inventory'), {
+                    type: type,
+                    text: text,
+                    createdAt: Date.now()
+                });
+                input.value = '';
+            } catch (err) {
+                console.error("Error adding inventory item:", err);
+            }
+        };
+
+        window.deleteInventoryItem = async (id) => {
+            try {
+                await deleteDoc(doc(db, 'inventory', id));
+            } catch (err) {
+                console.error("Error deleting inventory item:", err);
+            }
+        };
+
+        function renderInventory() {
+            const unitsContainer = document.getElementById('units-list');
+            const spacesContainer = document.getElementById('spaces-list');
+
+            const units = allInventory.filter(i => i.type === 'Unit');
+            const spaces = allInventory.filter(i => i.type === 'Space');
+
+            // Render Units
+            if (units.length === 0) {
+                unitsContainer.innerHTML = `<div style="font-size:0.72rem; color:#999; text-align:center; padding:12px;">No available units logged.</div>`;
+            } else {
+                unitsContainer.innerHTML = units.map(item => `
+                    <div class="custom-item">
+                        <div class="item-left">
+                            <span class="inv-badge">UNIT</span>
+                            <span class="item-text">${escapeHtml(item.text)}</span>
+                        </div>
+                        <button class="item-del-btn" onclick="deleteInventoryItem('${item.id}')" title="Remove Item">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            // Render Spaces
+            if (spaces.length === 0) {
+                spacesContainer.innerHTML = `<div style="font-size:0.72rem; color:#999; text-align:center; padding:12px;">No available spaces logged.</div>`;
+            } else {
+                spacesContainer.innerHTML = spaces.map(item => `
+                    <div class="custom-item">
+                        <div class="item-left">
+                            <span class="inv-badge" style="background:#fef9e7; color:#8a6d3b; border-color:#fbeed5;">SPACE</span>
+                            <span class="item-text">${escapeHtml(item.text)}</span>
+                        </div>
+                        <button class="item-del-btn" onclick="deleteInventoryItem('${item.id}')" title="Remove Item">✕</button>
+                    </div>
+                `).join('');
+            }
+        }
 
         // TO-DO LIST FIREBASE FUNCTIONS
         function listenToTasks() {
@@ -555,12 +691,12 @@
             }
 
             container.innerHTML = allTasks.map(task => `
-                <div class="todo-item ${task.completed ? 'completed' : ''}">
-                    <div class="todo-left">
-                        <input type="checkbox" class="todo-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}', ${task.completed})">
-                        <span class="todo-text">${escapeHtml(task.text)}</span>
+                <div class="custom-item ${task.completed ? 'completed' : ''}">
+                    <div class="item-left">
+                        <input type="checkbox" class="item-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}', ${task.completed})">
+                        <span class="item-text">${escapeHtml(task.text)}</span>
                     </div>
-                    <button class="todo-del-btn" onclick="deleteTask('${task.id}')" title="Delete Task">✕</button>
+                    <button class="item-del-btn" onclick="deleteTask('${task.id}')" title="Delete Task">✕</button>
                 </div>
             `).join('');
         }
